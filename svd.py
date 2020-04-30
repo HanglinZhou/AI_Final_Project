@@ -26,11 +26,13 @@ ratings = pd.read_csv(data_path/"ratings.csv")#userId,movieId,rating,timestamp
 #                 'userID': list(ratings.userId),
 #                 'rating': list(ratings.rating)}
 # df = pd.DataFrame(ratings_dict)
-#ratings = ratings[:200000]
+# ratings = ratings[:200]
 df=ratings.pivot(index='userId', columns='movieId', values='rating').fillna(0)
 
 print(df.head())
-
+df=df.to_numpy()
+print(type(df))
+print(df)
 import numpy as np
 
 # UxF: user * feature matrix
@@ -50,7 +52,7 @@ def svd(UxF, FxM, R, U, M, F):
         for u in range(U):
             for m in range(M):
                 # if has rating, compute error
-                if R[u][m] is not None:
+                if R[u][m] !=0:
                     err = R[u][m] - np.dot(UxF[u, :], FxM[:, m])
 
                     # tuning
@@ -62,7 +64,7 @@ def svd(UxF, FxM, R, U, M, F):
         errSum = 0
         for u in range(U):
             for m in range(M):
-                if R[u][m] is not None:
+                if R[u][m] != 0:
                     # if has rating, compute error
                     errSum = errSum + pow(R[u][m] - np.dot(UxF[u, :], FxM[:, m]), 2)
                     
@@ -72,25 +74,27 @@ def svd(UxF, FxM, R, U, M, F):
         # if err is small enough for us to stop repeating
         if errSum < stopRate:
             break
-    return UxF, FxM
+    return UxF, FxM,
 
     
 
 def main():
     # num of features
-    FList = np.array([5, 20, 50, 100])
+    FList = np.array([5, 20, 50, 100]) #what is it?
 
     # ratings matrx
-    R = [
-            [None, 1, 1, 3, 1],
-            [1, 2, None, 1, 3],
-            [None, 1, 1, 3, None],
-            [None, None, 5, 4, 4]
-        ]
+    # R = [
+    #         [None, 1, 1, 3, 1],
+    #         [1, 2, None, 1, 3],
+    #         [None, 1, 1, 3, None],
+    #         [None, None, 5, 4, 4]
+    #     ]
 
-    R = np.array(R)
+    # R = np.array(R)
+    R = df.to_numpy() #change the dataframe into numpy array
+    print('hi')
 
-    U = len(R)      # num of users
+    U = len(R)      # nusm of users
     M = len(R[0])   # num of movies
     
     # randomly initialize 2 parameter matrices
