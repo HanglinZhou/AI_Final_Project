@@ -33,8 +33,25 @@ class recommender_metrics:
 
         return res
 
-    def hitRate(topNPred, leftOutPred):
-        return -1
+    # returns numHits / totalLeftOut
+    # @topNPred: a dictionary w/ key: userID,
+    #                            value: list of top N ratings (moviesID, estRating)
+    # leftOutData: a list of left out data with high ratings from training set
+    def hitRate(topNPred, leftOutData):
+        # for each left out data, if the corresponding user has that movie in
+        # its top N list, count it as a hit
+        numHits, totalLeftOut = 0
+        for data in leftOutData:
+            userID = int(data[0])
+            movieID = int(data[1])
+
+            # check whether movie is in topN list of user
+            for predMovieID, _ in topNPred[userID]:
+                if (movieID == predMovieID):
+                    numHits = numHits + 1
+            # incremental total left out data
+            totalLeftOut = totalLeftOut + 1
+        return numHits / totalLeftOut
 
     def cumulativeHitRate(topNPred, leftOutPred, ratingCutOff=0):
         return -1
