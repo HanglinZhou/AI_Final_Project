@@ -5,7 +5,7 @@ from pathlib import Path
 from surprise import Dataset
 
 #load dataset
-data_path = Path("/Users/jing/Desktop/ml-latest-small")
+data_path = Path("./ml-latest-small")
 tags = pd.read_csv(data_path/"tags.csv") #userId,movieId,tag,timestamp
 links = pd.read_csv(data_path/"links.csv") #movieId,imdbId,tmdbId
 movies = pd.read_csv(data_path/"movies.csv") #movieId,title,genres
@@ -91,7 +91,7 @@ def main():
     #     ]
 
     # R = np.array(R)
-    R = df.to_numpy() #change the dataframe into numpy array
+    R = df #change the dataframe into numpy array
     print('hi')
 
     U = len(R)      # nusm of users
