@@ -1,5 +1,5 @@
 from surprise import accuracy
-
+from collections import defaultdict
 class recommender_metrics:
     # get fraction of concordant pairs
     def FCP(predictions):
@@ -14,8 +14,24 @@ class recommender_metrics:
     def RMSE(predictions):
         return accuracy.rmse(predictions, verbose=False)
 
-    def getTopN(predictions):
-        return []
+    # return a map w/
+    # key: user, value: a list of top n estRating movies (movieID, estRating)
+    def getTopN(predictions, n=10, ratingCutOff=4.0):
+        # create a map - key: userID, value: a list of (movieID, estRating)
+        res = defaultdict(list)
+
+        for userID, movieID, actlRating, estRating, _ in predictions:
+            # if estRating is larger than rating cut-off, add the movies w/
+            # estRating to the topN list of the corresponding user
+            if (estRating >= ratingCutOff):
+                res[int(userID)].append((int(movieID), estRating))
+
+        # for each user-list pair, sort the list by estRating, and keep top # N
+        for userID, movieList in res.items():
+            movieList.sort(key=lambda x:x[1], reverse=True)
+            res[userID] = res[0:N] # keep top N
+
+        return res
 
     def hitRate(topNPred, leftOutPred):
         return -1
