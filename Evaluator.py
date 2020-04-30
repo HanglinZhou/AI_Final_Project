@@ -1,7 +1,17 @@
-import self as self
-from surprise.model_selection import train_test_split
-from surprise.model_selection import LeaveOneOut
-from surprise import KNNBaseline
+from EvaluationDataSet import EvaluationData
+from recommender_metrics import recommender_metrics
+
+class Evaluator:
+    algos = []
+
+    def __init__(self,dataset,rank):
+        self.dataset = EvaluationData(dataset, rank)#a
+
+    def Add_Algo(self,algorithm):
+        alg = recommender_metrics()
+        self.algos.append(alg)
+
+    def print(self,TopN):
 
 
 
