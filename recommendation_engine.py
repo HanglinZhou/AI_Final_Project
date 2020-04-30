@@ -1,15 +1,6 @@
-import pandas as pd
-import numpy as np
-from pathlib import Path
-
+from data_processor import DataProcessor
 
 #load dataset
-data_path = Path("./data/movieLens/")
-tags = pd.read_csv(data_path/"tags.csv")
-links = pd.read_csv(data_path/"links.csv")
-movies = pd.read_csv(data_path/"movies.csv")
-ratings = pd.read_csv(data_path/"ratings.csv")
-genome_tags = pd.read_csv(data_path/"genome-tags.csv")
-genome_scores = pd.read_csv(data_path/"genome-scores.csv")
-
-print(tags.head())
+data_processor = DataProcessor()
+data_processor.SetDataPath('./ml-latest-small/')
+ratings = DataProcessor.LoadRating(data_processor)
