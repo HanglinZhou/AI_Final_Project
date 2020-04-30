@@ -37,7 +37,7 @@ def svd(UxF, FxM, R, U, M, F):
                 if R[u][m] != 0:
                     # if has rating, compute error
                     errSum = errSum + pow(R[u][m] - np.dot(UxF[u, :], FxM[:, m]), 2)
-                    
+
                     # TODO: regularization[???]
                     for f in range(F):
                         errSum = errSum + (beta / 2) * (pow(UxF[u][f], 2) + pow(FxM[f][m], 2))
@@ -45,10 +45,41 @@ def svd(UxF, FxM, R, U, M, F):
         if errSum < stopRate:
             break
         print("not breaking, enter next loop")
-    print(errSum)    
+    print(errSum)
     return UxF, FxM,
 
-    
+def load():
+    # load dataset
+    data_path = Path("./ml-latest-small")
+    tags = pd.read_csv(data_path / "tags.csv")  # userId,movieId,tag,timestamp
+    links = pd.read_csv(data_path / "links.csv")  # movieId,imdbId,tmdbId
+    movies = pd.read_csv(data_path / "movies.csv")  # movieId,title,genres
+    ratings = pd.read_csv(data_path / "ratings.csv")  # userId,movieId,rating,timestamp
+    # genome_tags = pd.read_csv(data_path/"genome-tags.csv") #tagId,tag
+    # genome_scores = pd.read_csv(data_path/"genome-scores.csv") #movieId,tagId,relevance
+
+    # data = Dataset.load_builtin('ml-100k')
+    # print(data)
+    # print(tags.head())
+
+    # print(ratings.head())
+
+    # print(movies.head())
+    # inner join
+
+    # ratings_dict = {'itemID': list(ratings.movieId),
+    #                 'userID': list(ratings.userId),
+    #                 'rating': list(ratings.rating)}
+    # df = pd.DataFrame(ratings_dict)
+    # ratings = ratings[:200]
+    df = ratings.pivot(index='userId', columns='movieId', values='rating').fillna(0)
+
+    print(df.head())
+    df = df.to_numpy()
+    print(type(df))
+    print(df)
+    return df
+
 def load():
 
     #load dataset
@@ -96,19 +127,18 @@ def main():
 
     # R = np.array(R)
     R = load() #change the dataframe into numpy array
-    print("printing R")
     print(R)
 
     U = len(R)      # nusm of users
     M = len(R[0])   # num of movies
-    
+
     # randomly initialize 2 parameter matrices
     for f in range(len(FList)):
         F = FList[f]
         UxF = np.random.rand(U, F)
         FxM = np.random.rand(F, M)
 
-        # get new 
+        # get new
         newUxF, newFxM = svd(UxF, FxM, R, U, M, F)
         newR = np.dot(newUxF, newFxM)
 
@@ -117,4 +147,3 @@ def main():
         print("-----------------END number of features =", F, "-------------------\n")
 
 main()
-
