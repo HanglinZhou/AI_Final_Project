@@ -1,0 +1,28 @@
+import numpy as np
+import pandas as pd
+from pathlib import Path
+from matplotlib import pyplot as plt
+
+data_path = Path("./data/movieLens/")
+ratings = pd.read_csv(data_path/"ratings.csv")
+
+#analyze statisticsExtract the ratings from the DataFrame
+r = ratings.rating
+print(r.describe())
+
+#Plot histogram
+ratings.groupby('rating').size().plot(kind = 'bar')
+plt.show()
+
+# Plot average rating per user
+user_means = ratings.groupby('userId').rating.mean().sort_values()
+_, ax = plt.subplots(figsize=(16, 6))
+ax.plot(np.arange(len(user_means)), user_means.values, 'k-')
+
+ax.fill_between(np.arange(len(user_means)), user_means.values, alpha=0.3)
+ax.set_xticklabels('')  # 1000 labels is nonsensical
+ax.set_ylabel('Rating')
+ax.set_xlabel(f'{len(user_means)} average ratings per user')
+ax.set_ylim(0, 5)
+ax.set_xlim(0, len(user_means))
+plt.show()
