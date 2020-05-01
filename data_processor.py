@@ -1,6 +1,9 @@
+
 #This class is used for read and load data.
 import csv
 from collections import defaultdict
+
+#This class is used for read and load data. And all other dataset related operations.
 
 from surprise import Dataset
 from surprise import Reader

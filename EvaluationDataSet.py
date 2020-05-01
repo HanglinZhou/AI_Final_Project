@@ -112,12 +112,3 @@ class EvaluationDataSet:
 
     def GetSimilarities(self):
         return self.sim_matrix
-
-
-
-
-
-
-
-
-
