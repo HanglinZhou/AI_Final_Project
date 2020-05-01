@@ -79,12 +79,3 @@ class EvaluationData:
 
     def GetSimilarities(self):
         return self.sim_matrix
-
-
-
-
-
-
-
-
-
