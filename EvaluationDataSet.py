@@ -3,36 +3,78 @@ from surprise.model_selection import train_test_split
 from surprise.model_selection import LeaveOneOut
 from surprise import KNNBaseline
 from surprise import Trainset
-class EvaluationData:
+import csv
+from collections import defaultdict
 
-    def __int__(self, fulldata, popularitydata):
+from surprise import Dataset
+from surprise import Reader
 
+
+class EvaluationDataSet:
+
+    rating = './ml-latest-small/ratings.csv'
+    movies = './ml-latest-small/movies.csv'
+
+    def LoadRating(self):
+        reader = Reader(line_format='user item rating timestamp', sep=',', skip_lines=1)
+        return Dataset.load_from_file(self.rating, reader=reader)
+
+    def loadPopularityData(self):
+        # similart to getOrDefault in Java
+        ratingTimes = defaultdict(int)
+        rankings = defaultdict(int)
+
+        with open(self.rating, newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            next(reader)
+            for row in reader:
+                movieId = int(row[1])
+                ratingTimes[movieId] += 1
+        rank = 1
+
+        for movieID, count in sorted(ratingTimes.items(), key=lambda x: x[1], reverse=True):
+            rankings[movieID] = rank
+            rank += 1
+        return rankings
+
+    # def __init__(self):
+    #     self.evaluataiondata=self.LoadRating()
+    #     self.rankdata = self.loadPopularityData()
+
+    def getEvaluation(self):
+        return self.fulldata
+    def getRank(self):
+        return self.popularitydata
+
+
+    def __init__(self):
         # build the full data
-        self.fullTrainData = fulldata.build_full_trainset()
+
+        self.fulldata = self.LoadRating()
+        self.popularitydata = self.loadPopularityData()
+        self.fullTrainData = self.fulldata.build_full_trainset()
         #build the full anti data test set
-        self.fullAntiTestData = fulldata.build_anti_testset()
+        self.fullAntiTestData = self.fullTrainData.build_anti_testset()
 
         #get 80% train data and 20% test data
-        self.traindata, self.testdata = train_test_split(fulldata, test_size=0.2)
+        self.traindata, self.testdata = train_test_split(self.fulldata, test_size=0.2)
 
 
         #build leave-one-out cross validation
         self.LOO_Data = LeaveOneOut()
-        for train, test in self.LOO_Data.split(fulldata):
+        for train, test in self.LOO_Data.split(self.fulldata):
             self.LOO_Train = train
             self.LOO_Test = test
         self.LOOAntiTest = self.LOO_Train.build_anti_testset()
 
         #pass the popularitydata
-        self.rank = popularitydata
+        self.rank = self.popularitydata
 
         #similarity used for diversity
 
         sim_options = {'name': 'cosine', 'user_based': False}  # compute  similarities between items
         self.sim_matrix = KNNBaseline(sim_options=sim_options)
         self.sim_matrix.fit(self.fullTrainData)
-
-
 
     #getter
     def GetFullTrainData(self):
@@ -51,15 +93,6 @@ class EvaluationData:
         antiUserDataSet+=[(trainset.to_raw_uid(uidint),trainset.to_raw_iid(i),temp) for i in trainset.all_items()
                           if i not in user_watched_movies] #since we find the data in the pandas later, we record the raw id
         return antiUserDataSet
-
-
-
-
-
-
-
-
-
 
     def GetTrainData(self):
         return self.traindata

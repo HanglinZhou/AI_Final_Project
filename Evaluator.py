@@ -1,16 +1,20 @@
 import csv
 
-from EvaluationDataSet import EvaluationData
+from EvaluationDataSet import EvaluationDataSet
 from algorithm_eval import algorithm_eval
 class Evaluator:
     algos = []
     movie_id_to_name = {}
     movie = '../ml-latest-small/movies.csv'
-    def __init__(self,dataset,rank):
-        self.dataset = EvaluationData(dataset, rank)#a
 
-    def Add_Algo(self,algorithm):
-        alg = algorithm_eval(algorithm,algorithm.getName())
+    def __init__(self):
+
+        tempdataset = EvaluationDataSet()
+        self.dataset = tempdataset
+
+
+    def Add_Algo(self,algorithm,name):
+        alg = algorithm_eval(algorithm,name)
         self.algos.append(alg)
 
     def readMovieName(self):
@@ -30,17 +34,19 @@ class Evaluator:
         result = {}
         for algo in self.algos:
             result[algo.getName()] = algo.evaluate(self.dataset,TopN)
+            print(len(result))
 
         if(TopN):
             print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
                 "Algorithm", "RMSE", "MAE", "HR", "CHR","RHR", "ARHR", "FCP", "Diversity", "Coverage","Novelty"))
             for(name, metrics) in result.items():
                 print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
-                metrics["Algorithm"],metrics["RMSE"], metrics["MAE"],
+               name, metrics["RMSE"], metrics["MAE"],
                 metrics["HR"], metrics["CHR"],metrics["RHR"], metrics["ARHR"],metrics["FCP"], metrics["Diversity"],
                 metrics["Coverage"],metrics["Novelty"]))
-            else:
-                print("{:<10} {:<10} {:<10}".format(metrics["Algorithm"],metrics["FCP"], metrics["RMSE"], metrics["MAE"] ))
+        else:
+            for (name, metrics) in result.items():
+                print("{:<10} {:<10} {:<10}".format(name, metrics["RMSE"], metrics["MAE"] ))
         print("\n Note: \n")
         print("RMSE: Root Mean Squared Error")
         print("MAE: Mean Average Error")
@@ -54,23 +60,30 @@ class Evaluator:
             print("Coverage: Ratio of users for whom recommendations above a certain threshold exist.")
             print("Novelty: Average popularity rank of recommended items.")
 
+
     def GenerateTopNRecs(self,movieList,testUser,N):
         for algo in self.algos:
             print("\n",algo.getName())
             #get full train data set
             print("\n Training Data:   ")
+
             fulltraindata = self.dataset.GetFullTrainData()
+            #why fit full?
             algo.getAlgorithm().fit(fulltraindata)
 
             #get user anti test data set
             userAntiData = self.dataset.GetAntiUserTestData(testUser)
+            #make the prediciton on unseen movies type:tuple
             predictions = algo.getAlgorithm().test(userAntiData)
 
             print("The Top", N, "Recommendations Are: ")
             recommendations = []
+
+            #since it's tuple, we have to add it into an list and then sort.
             for userID, movieID, realRating, estimatedRating,details in predictions:
                 movieid_int = int(movieID)
                 recommendations.append((movieid_int,estimatedRating))
+            #Descending sort by estimatedRating
             recommendations.sort(key = lambda  x:x[1],reverse=True)
 
             for rating in recommendations[:N]:

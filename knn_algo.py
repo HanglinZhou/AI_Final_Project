@@ -15,7 +15,7 @@ from surprise import KNNWithMeans
 from surprise import KNNBaseline
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
-from EvaluationDataSet import EvaluationData
+from EvaluationDataSet import EvaluationDataSet
 from sklearn.model_selection import train_test_split
 from pathlib import Path
 import pandas as pd
@@ -23,7 +23,7 @@ import pandas as pd
 class knn:
 
     # Return knn algorithms in sequence of
-    def UntunedknnAlgorithms():
+    def UntunedknnAlgorithms(self):
 
         algo = {}
 
@@ -43,7 +43,7 @@ class knn:
         return algo
 
     # tuning by k-fold cross-validation
-    def KnnAlgo():
+    def KnnAlgo(self):
 
         algo = knn.UntunedknnAlgorithms()
 
@@ -107,7 +107,7 @@ class knn:
 
         return algo
     
-    def data_split():
+    def data_split(self):
         data_path = Path("./data/movieLens/")
         ratings = pd.read_csv(data_path / "ratings.csv")
         # Split data into training and testing.
