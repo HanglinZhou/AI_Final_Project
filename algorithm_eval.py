@@ -23,9 +23,6 @@ class algorithm_eval:
     def getAlgorithm(self):
         return self.algorithm
 
-    # get fraction of concordant pairs
-    def FCP(predictions):
-        return accuracy.fcp(predictions, verbose=False)
 
     # get mean absolute error
     def MAE(predictions):
@@ -81,8 +78,14 @@ class algorithm_eval:
     def ratingHitRate(topNPred, leftOutPred):
         return -1
 
+    #Rank metrics
     def avrgReciprocalHitRank(topNPred, leftOutPred):
         return -1
+        # get fraction of concordant pairs
+
+    #Rank metrics
+    def FCP(predictions):
+        return accuracy.fcp(predictions, verbose=False)
 
     def diversity(topNPred, leftOutPred):
         return -1
