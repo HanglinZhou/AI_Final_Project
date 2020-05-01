@@ -11,7 +11,7 @@ class HybridAlgoWeighted(AlgoBase):
     # store input weights as a dictionary: key: name of algo, value: weight
     weights = {}
 
-    weighted_mean = 0
+    weighted_estimate = 0
 
     # constructor: initialize our algorithms and weights
     def __init__(self, algorithms, weights):
@@ -31,12 +31,11 @@ class HybridAlgoWeighted(AlgoBase):
 
     # derived from AlgoBase: u as uid: (Raw) id of the user; i as iid: (Raw) id of the item.
     def estimate(self, u, i):
-        weighted_estimate = 0
         print('Hybrid Algo included (algo with weight): ')
         for algo in self.algorithms:
             # sum of (each algo's estimate * its weight) = weighted_estimate
             print('', algo, ' with ', self.weights[algo])
-            weighted_estimate += self.algorithms[algo].estimate(u, i) * self.weights[algo]
+            self.weighted_estimate += self.algorithms[algo].estimate(u, i) * self.weights[algo]
 
-        print('Hybrid Algo Weighted estimate: ', weighted_estimate)
-        return weighted_estimate
+        print('Hybrid Algo Weighted estimate: ', self.weighted_estimate)
+        return self.weighted_estimate
