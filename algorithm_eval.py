@@ -23,6 +23,9 @@ class algorithm_eval:
     def getAlgorithm(self):
         return self.algorithm
 
+    # get fraction of concordant pairs
+    def FCP(predictions):
+        return accuracy.fcp(predictions, verbose=False)
 
     # get mean absolute error
     def MAE(predictions):
@@ -64,28 +67,94 @@ class algorithm_eval:
             userID = int(data[0])
             movieID = int(data[1])
 
-            # check whether movie is in topN list of user
+            # check whether left-out movie is in topN list of user
             for predMovieID, _ in topNPred[userID]:
                 if (movieID == predMovieID):
-                    numHits = numHits + 1
+                    numHits += 1
+                    break
             # incremental total left out data
-            totalLeftOut = totalLeftOut + 1
+            totalLeftOut += 1
         return numHits / totalLeftOut
 
-    def cumulativeHitRate(topNPred, leftOutPred, ratingCutOff=0):
-        return -1
+    # returns numHits / totalLeftOut, if the hits has ratings >= ratingCutOff
+    # @topNPred: a dictionary w/ key: userID,
+    #                            value: list of top N ratings (moviesID, estRating)
+    # leftOutData: a list of left out data with high ratings from training set
+    # ratingCutOff: if actual rating < ratingCutOff, does not count as hits
+    # (deal with sparse data point? TODO: make sure I'm not lying)
+    def cumulativeHitRate(topNPred, leftOutData, ratingCutOff=3.0):
+        # for each left out data, if the corresponding user has that movie in
+        # its top N list, count it as a hit
+        numHits, totalLeftOut = 0
+        for data in leftOutData:
+            actualRating = data[2]
+            # if actual rating of left out movie >= cut off rating,
+            # count hit if there exists one
+            if (actualRating >= ratingCutOff)
+                userID = int(data[0])
+                movieID = int(data[1])
 
+                # check whether left-out movie is in topN list of user
+                for predMovieID, _ in topNPred[userID]:
+                    if (movieID == predMovieID):
+                        numHits += 1
+                        break
+                # incremental total left out data
+                totalLeftOut += 1
+        return numHits / totalLeftOut
+
+    # returns numHits / totalLeftOut foe each rating seperately
+    # @topNPred: a dictionary w/ key: userID,
+    #                            value: list of top N ratings (moviesID, estRating)
+    # leftOutData: a list of left out data with high ratings from training set
     def ratingHitRate(topNPred, leftOutPred):
-        return -1
+        # key: rating, value: numHits / totalLeftOut corresponding to each rating
+        numHits = defaultdict(float)
+        totalLeftOut = defaultdict(float)
 
-    #Rank metrics
-    def avrgReciprocalHitRank(topNPred, leftOutPred):
-        return -1
-        # get fraction of concordant pairs
+        # for each left out data, if the corresponding user has that movie in
+        # its top N list, count it as a hit
+        for data in leftOutData:
+            userID = int(data[0])
+            movieID = int(data[1])
+            actualRating = data[2]
 
-    #Rank metrics
-    def FCP(predictions):
-        return accuracy.fcp(predictions, verbose=False)
+            # check whether left-out movie is in topN list of user
+            for predMovieID, _ in topNPred[userID]:
+                if (movieID == predMovieID):
+                    numHits[actualRating] += 1
+                    break
+            # incremental total left out data
+            totalLeftOut[actualRating] += 1
+
+        res = ""
+        # arrange hit rates in increasing order of the corresponding ratings
+        for rating in numHits.keys().sort():
+            res += "{} {}\n".format(rating, numHits[rating]/totalLeftOut[rating])
+
+        return res
+
+
+    # returns rankedHits / totalLeftOut
+    # @topNPred: a dictionary w/ key: userID,
+    #                            value: list of top N ratings (moviesID, estRating)
+    # leftOutData: a list of left out data with high ratings from training set
+    def avrgReciprocalHitRank(topNPred, leftOutData):
+        sumRankedHits, totalLeftOut = 0
+        for data in leftOutData:
+            userID = int(data[0])
+            movieID = int(data[1])
+
+            # check whether left-out movie is in topN list of user
+            rank = 0
+            for predMovieID, _ in topNPred[userID]:
+                rank += 1 # for each movie in the top N list, increment its rank
+                if (movieID == predMovieID):
+                    sumRankedHits += 1.0 / rank
+                    break
+            # incremental total left out data
+            totalLeftOut += 1
+        return sumRankedHits / totalLeftOut
 
     def diversity(topNPred, leftOutPred):
         return -1
@@ -94,4 +163,4 @@ class algorithm_eval:
         return -1
 
     def novelty(topNPred, rankings):
-        return -1
+        return -1re
