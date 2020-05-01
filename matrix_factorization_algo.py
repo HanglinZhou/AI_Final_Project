@@ -55,6 +55,7 @@ class MatrixFactorizationAlgo:
 
         return algo
 
+
     def tune_and_find_param(self, algo_name, algo, rating_data):
         param_grid = {'n_factors': [10, 200], 'n_epochs': [20, 50], 'lr_all': [0.001, 0.020],
                           'reg_all': [0.010, 0.030]}
@@ -71,3 +72,4 @@ class MatrixFactorizationAlgo:
         # print the best set of parameters
         print(best_params)
         return best_params
+

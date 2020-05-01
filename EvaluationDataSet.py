@@ -41,6 +41,26 @@ class EvaluationData:
     def GetAntiTestData(self):
         return self.fullAntiTestData
 
+    def GetAntiUserTestData(self,userId): #the same logic as the build_anti_test but for the spefic user
+        trainset = self.fullTrainData
+        temp = trainset.global_mean
+
+        antiUserDataSet = []
+        uidint = trainset.to_uid_inner(str(userId)) #find the specific user inner id
+        user_watched_movies =set(x for (x,y) in trainset.ur[uidint]) #since int the train set, we use innter id
+        antiUserDataSet+=[(trainset.to_raw_uid(uidint),trainset.to_raw_iid(i),temp) for i in trainset.all_items()
+                          if i not in user_watched_movies] #since we find the data in the pandas later, we record the raw id
+        return antiUserDataSet
+
+
+
+
+
+
+
+
+
+
     def GetTrainData(self):
         return self.traindata
 

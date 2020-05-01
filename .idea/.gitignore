@@ -1,2 +1,8 @@
 # Default ignored files
 /workspace.xml
+<<<<<<< HEAD
+=======
+/.idea/*.iml
+/.idea/*.xml
+
+>>>>>>> fd30e8be641d3691cb230c839aa69ec2a9109715
