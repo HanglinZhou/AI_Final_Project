@@ -20,23 +20,22 @@ evaluator = Evaluator()
 #call MFalgo generate algo
 #call KNNalgo generate algo
 knngenerator = knn()
-knn_algo = knngenerator.untuned_knn_algo()
-
+#knn_algo = knngenerator.untuned_knn_algo()
+knn_algo = knngenerator.generate_knn(evaluationData)
 # tune knn algo
-tuned_knn_algo = {}
-best_k = {}
+# tuned_knn_algo = {}
+# best_k = {}
 for key in knn_algo:
     evaluator.Add_Algo(knn_algo[key],key)
 
-for key in knn_algo:
-    name,tuned_knn_algo[name] = knngenerator.analyze_knn_model(evaluationData, key)
+# for key in knn_algo:
+#     name,tuned_knn_algo[name] = knngenerator.analyze_knn_model(evaluationData, key)
 
-print("tune added")
+# print("tune added")
 
-
-for key in tuned_knn_algo:
-    print(type(tuned_knn_algo[key]))
-    evaluator.Add_Algo(tuned_knn_algo[key],key)
+# for key in tuned_knn_algo:
+#     print(type(tuned_knn_algo[key]))
+#     evaluator.Add_Algo(tuned_knn_algo[key],key)
 
 
 
