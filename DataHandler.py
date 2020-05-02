@@ -10,11 +10,14 @@ from surprise import Dataset
 from surprise import Reader
 
 
-class EvaluationDataSet:
+class DataHandler:
 
-    rating = './ml-latest-small/ratings.csv'
-    movies = './ml-latest-small/movies.csv'
+    # rating = './ml-latest-small/ratings.csv'
+    # movies = './ml-latest-small/movies.csv'
 
+    # for testing purpose
+    rating = './test-data/ratings.csv'
+    movies = './test-data/movies.csv'
     def LoadRating(self):
         reader = Reader(line_format='user item rating timestamp', sep=',', skip_lines=1)
         return Dataset.load_from_file(self.rating, reader=reader)
@@ -51,10 +54,12 @@ class EvaluationDataSet:
         # build the full data
 
         self.fulldata = self.LoadRating()
+        self.fulldata = self.fulldata
         self.popularitydata = self.loadPopularityData()
         self.fullTrainData = self.fulldata.build_full_trainset()
         #build the full anti data test set
         self.fullAntiTestData = self.fullTrainData.build_anti_testset()
+        self.fullTestData = self.fullTrainData.build_testset()
 
         #get 80% train data and 20% test data
         self.traindata, self.testdata = train_test_split(self.fulldata, test_size=0.2)
@@ -93,6 +98,8 @@ class EvaluationDataSet:
         antiUserDataSet+=[(trainset.to_raw_uid(uidint),trainset.to_raw_iid(i),temp) for i in trainset.all_items()
                           if i not in user_watched_movies] #since we find the data in the pandas later, we record the raw id
         return antiUserDataSet
+    def GetFullTestData(self):
+        return self.fullTestData
 
     def GetTrainData(self):
         return self.traindata
@@ -107,7 +114,7 @@ class EvaluationDataSet:
     def GetLOOAntiTestSet(self):
         return self.LOOAntiTest
 
-    def rank(self):
+    def GetPopularRankings(self):
         return self.rank
 
     def GetSimilarities(self):

@@ -1,6 +1,6 @@
 import csv
 
-from EvaluationDataSet import EvaluationDataSet
+from DataHandler import DataHandler
 from algorithm_eval import algorithm_eval
 class Evaluator:
     algos = []
@@ -9,7 +9,7 @@ class Evaluator:
 
     def __init__(self):
 
-        tempdataset = EvaluationDataSet()
+        tempdataset = DataHandler()
         self.dataset = tempdataset
 
 
@@ -34,31 +34,33 @@ class Evaluator:
         result = {}
         for algo in self.algos:
             result[algo.getName()] = algo.evaluate(self.dataset,TopN)
-            print(len(result))
+
 
         if(TopN):
-            print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
-                "Algorithm", "RMSE", "MAE", "HR", "CHR","RHR", "ARHR", "FCP", "Diversity", "Coverage","Novelty"))
+            print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} ".format(
+                "Algorithm", "RMSE", "MAE", "HR", "CHR","ARHR", "Diversity", "Precision", "Recall", "Coverage","Novelty"))
             for(name, metrics) in result.items():
-                print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
-               name, metrics["RMSE"], metrics["MAE"],
-                metrics["HR"], metrics["CHR"],metrics["RHR"], metrics["ARHR"],metrics["FCP"], metrics["Diversity"],
-                metrics["Coverage"],metrics["Novelty"]))
-        else:
-            for (name, metrics) in result.items():
-                print("{:<10} {:<10} {:<10}".format(name, metrics["RMSE"], metrics["MAE"] ))
+                print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}{:<10}{:<10}".format(name, metrics["RMSE"], metrics["MAE"],metrics["HR"],
+                                                                                              metrics["CHR"], metrics["ARHR"],
+                                                                                              metrics["Diversity"],metrics["Precision"], metrics["Recall"],
+                                                                                              metrics["Coverage"],metrics["Novelty"], "Ratings HitRate"))
+                print("RHR")
+                print("{:<10} {:<10}".format("Ratings", "HitRate"))
+                print(metrics["RHR"])
+        # else:
+        #     for (name, metrics) in result.items():
+        #         print("{:<10} {:<10} {:<10}".format(name, metrics["RMSE"], metrics["MAE"] ))
         print("\n Note: \n")
         print("RMSE: Root Mean Squared Error")
         print("MAE: Mean Average Error")
         if(TopN):
             print("HR: Hit Rate")
             print("CHR: Cumulative Hit Rate")
-            print("RHR: Rating Hit Rate ")
             print("ARHR: Average Rank Hit Rate")
-            print("FCP: Fraction of Concordant Pairs")
             print("Diversity: 1-Similarity")
             print("Coverage: Ratio of users for whom recommendations above a certain threshold exist.")
             print("Novelty: Average popularity rank of recommended items.")
+            print("RHR: Rating Hit Rate ")
 
 
     def GenerateTopNRecs(self,movieList,testUser,N):
@@ -68,9 +70,8 @@ class Evaluator:
             print("\n Training Data:   ")
 
             fulltraindata = self.dataset.GetFullTrainData()
-            #why fit full?
-            algo.getAlgorithm().fit(fulltraindata)
 
+            algo.getAlgorithm().fit(fulltraindata)
             #get user anti test data set
             userAntiData = self.dataset.GetAntiUserTestData(testUser)
             #make the prediciton on unseen movies type:tuple
@@ -88,22 +89,3 @@ class Evaluator:
 
             for rating in recommendations[:N]:
                 print(movieList.getMovieName(rating[0]),rating[1])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

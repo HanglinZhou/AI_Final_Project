@@ -15,7 +15,7 @@ from surprise import KNNWithMeans
 from surprise import KNNBaseline
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
-from EvaluationDataSet import EvaluationDataSet
+from DataHandler import DataHandler
 from sklearn.model_selection import train_test_split
 from pathlib import Path
 import pandas as pd
@@ -106,11 +106,10 @@ class knn:
         # algo['tunedblKNN'] = tunedblKNN
 
         return algo
-    
+
     def data_split(self):
         data_path = Path("./data/movieLens/")
         ratings = pd.read_csv(data_path / "ratings.csv")
         # Split data into training and testing.
         x_train, x_test = train_test_split(ratings, test_size=0.2)
         return(x_train)
-        
