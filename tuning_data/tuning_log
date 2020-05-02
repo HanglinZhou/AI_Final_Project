@@ -1,0 +1,165 @@
+Algorithm  RMSE       MAE        HR         CHR        ARHR       Diversity  Coverage   Novelty
+bcKNN      0.972      0.747      0.111      0.125      0.0        0.089      50.0       781.518
+RHR
+Ratings    HitRate
+2.0        0.073
+2.5        0.048
+3.0        0.053
+3.5        0.053
+4.0        0.152
+4.5        0.179
+5.0        0.18
+
+wmKNN      0.901      0.689      0.062      0.072      0.0        0.276      49.446     2002.936
+RHR
+Ratings    HitRate
+2.0        0.024
+3.0        0.023
+3.5        0.053
+4.0        0.076
+4.5        0.077
+5.0        0.125
+
+wzKNN      0.898      0.682      0.07       0.078      0.0        0.252      49.575     1861.054
+RHR
+Ratings    HitRate
+2.0        0.073
+3.0        0.03
+3.5        0.053
+4.0        0.082
+4.5        0.103
+5.0        0.125
+
+blKNN      0.878      0.672      0.085      0.097      0.0        0.22       49.659     1566.796
+RHR
+Ratings    HitRate
+2.0        0.049
+3.0        0.03
+3.5        0.053
+4.0        0.114
+4.5        0.154
+5.0        0.148
+
+Random     1.426      1.14       0.049      0.045      0.0        0.05       50.0       864.545
+RHR
+Ratings    HitRate
+0.5        0.167
+1.0        0.095
+2.0        0.073
+2.5        0.048
+3.0        0.038
+3.5        0.035
+4.0        0.044
+4.5        0.077
+5.0        0.047
+
+Algorithm  RMSE       MAE        HR         CHR        ARHR       Diversity  Coverage   Novelty
+blKNN      0.877      0.671      0.074      0.085      0.0        0.221      49.672     1561.118
+RHR
+Ratings    HitRate
+2.0        0.024
+2.5        0.037
+3.0        0.045
+3.5        0.083
+4.0        0.052
+4.5        0.098
+5.0        0.168
+
+blKNN_tuned 0.873      0.667      0.085      0.099      0.0        0.208      49.685     1499.049
+RHR
+Ratings    HitRate
+2.0        0.024
+2.5        0.037
+3.0        0.045
+3.5        0.062
+4.0        0.087
+4.5        0.115
+5.0        0.177
+
+Done computing similarity matrix.
+Algorithm  RMSE       MAE        HR         CHR        ARHR       Diversity  Coverage   Novelty
+blKNN      0.869575   0.665809   0.086885   0.100193   0.0        0.220378   49.659016  1564.864519
+RHR
+Ratings    HitRate
+1.0        0.045455
+3.0        0.023438
+3.5        0.046875
+4.0        0.102564
+4.5        0.238095
+5.0        0.155039
+
+blKNN_tuned 0.864566   0.661121   0.091803   0.104046   0.0        0.208346   49.672131  1498.123498
+RHR
+Ratings    HitRate
+1.0        0.045455
+2.5        0.05
+3.0        0.023438
+3.5        0.046875
+4.0        0.115385
+4.5        0.285714
+5.0        0.139535
+
+ Note:
+
+RMSE: Root Mean Squared Error
+MAE: Mean Average Error
+HR: Hit Rate
+CHR: Cumulative Hit Rate
+ARHR: Average Rank Hit Rate
+Diversity: 1-Similarity
+Coverage: Ratio of users for whom recommendations above a certain threshold exist.
+Novelty: Average popularity rank of recommended items.
+RHR: Rating Hit Rate
+
+
+
+Algorithm  RMSE       MAE        HR         CHR        ARHR       Diversity  Coverage   Novelty
+Random     1.426616   1.141577   0.077049   0.083969   0.0        0.050347   50.0       879.918033
+RHR
+Ratings    HitRate
+2.0        0.04878
+2.5        0.047619
+3.0        0.08209
+3.5        0.016393
+4.0        0.075949
+4.5        0.057692
+5.0        0.142857
+
+SVD        0.870181   0.667292   0.108197   0.120229   0.0        0.038821   40.27377   448.459641
+RHR
+Ratings    HitRate
+2.0        0.02439
+2.5        0.095238
+3.0        0.059701
+3.5        0.032787
+4.0        0.120253
+4.5        0.192308
+5.0        0.201681
+
+PMF        0.975124   0.751968   0.106557   0.124046   0.0        0.045367   33.313115  421.417253
+RHR
+Ratings    HitRate
+3.0        0.059701
+4.0        0.126582
+4.5        0.211538
+5.0        0.218487
+
+SVD++      0.857263   0.657108   0.104918   0.120229   0.0        0.044345   39.57541   530.910816
+RHR
+Ratings    HitRate
+2.0        0.02439
+3.0        0.052239
+3.5        0.032787
+4.0        0.139241
+4.5        0.173077
+5.0        0.193277
+
+NMF        0.917232   0.703686   0.080328   0.091603   0.0        0.140328   48.42623   1068.602167
+RHR
+Ratings    HitRate
+2.0        0.02439
+3.0        0.037313
+3.5        0.032787
+4.0        0.101266
+4.5        0.115385
+5.0        0.159664
