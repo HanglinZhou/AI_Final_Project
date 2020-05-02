@@ -207,8 +207,13 @@ class algorithm_eval:
                     totalSim += simsMatrix[innerID_i][innerID_j]
                     numPairs += 1
 
-        similarity = totalSim / numPairs
-        diversity = 1 - similarity
+        # if no recommendation is generated
+        if numPairs == 0:
+            diversity = -1
+        else:
+            similarity = totalSim / numPairs
+            diversity = 1 - similarity
+
         return round(diversity, self.NUM_DIGITS)
         #return diversity
 
@@ -247,46 +252,50 @@ class algorithm_eval:
                 # add the novelty of the current movie
                 totalNovelty += popularRankings[movieID]
                 numMovies += 1
+
+        # if no recommendation is generated
+        if numMovies == 0:
+            return -1
         return round(totalNovelty / numMovies, self.NUM_DIGITS)
         #return totalNovelty / numMovies
 
-    # returns number of recommended movies that are relevant / recommended movies
-    #    a movie is relevant if its actual rating is greater than a given threshold
-    # @topNPred: a dictionary w/ key: userID,
-    #                            value: list of top N ratings (moviesID, estRating, actualRating)
-    # @threshold: threshold for a movie to be considered as revelant
-    def precision(self, topNPred, threshold=2.5):
-        numRelevant = 0
-        numRecommend = 0
-
-        # for each user, get num of relevant movies
-        for userID, movieList in topNPred.items():
-            for _, _, actualRating in movieList: # if relevant
-                if actualRating >= threshold:
-                    numRelevant += 1
-                numRecommend += 1
-        return round(numRelevant / numRecommend, self.NUM_DIGITS)
-
-    # returns num recommended movies that are relevant / relevant movies
-    #    a movie is relevant if its actual rating is greater than a given threshold
-    # @topNPred: a dictionary w/ key: userID,
-    #                            value: list of top N ratings (moviesID, estRating, actualRating)
-    # @completedPredictions: predictions for all movies and all users
-    # @threshold: threshold for a movie to be considered as revelant
-    def recall(self, topNPred, completedPredictions, threshold=3.5):
-        numRelevant = 0
-        numRecommendRelevant = 0
-        # get all relevant movies
-        for _, _, actualRating, _, _ in completedPredictions:
-            if actualRating >= threshold:
-                numRelevant += 1
-
-        for userID, movieList in topNPred.items():
-            for _, _, actualRating in movieList:
-                if actualRating >= threshold:
-                    numRecommendRelevant += 1
-
-        return round(numRecommendRelevant / numRelevant , self.NUM_DIGITS)
+    # # returns number of recommended movies that are relevant / recommended movies
+    # #    a movie is relevant if its actual rating is greater than a given threshold
+    # # @topNPred: a dictionary w/ key: userID,
+    # #                            value: list of top N ratings (moviesID, estRating, actualRating)
+    # # @threshold: threshold for a movie to be considered as revelant
+    # def precision(self, topNPred, threshold=2.5):
+    #     numRelevant = 0
+    #     numRecommend = 0
+    #
+    #     # for each user, get num of relevant movies
+    #     for userID, movieList in topNPred.items():
+    #         for _, _, actualRating in movieList: # if relevant
+    #             if actualRating >= threshold:
+    #                 numRelevant += 1
+    #             numRecommend += 1
+    #     return round(numRelevant / numRecommend, self.NUM_DIGITS)
+    #
+    # # returns num recommended movies that are relevant / relevant movies
+    # #    a movie is relevant if its actual rating is greater than a given threshold
+    # # @topNPred: a dictionary w/ key: userID,
+    # #                            value: list of top N ratings (moviesID, estRating, actualRating)
+    # # @completedPredictions: predictions for all movies and all users
+    # # @threshold: threshold for a movie to be considered as revelant
+    # def recall(self, topNPred, completedPredictions, threshold=3.5):
+    #     numRelevant = 0
+    #     numRecommendRelevant = 0
+    #     # get all relevant movies
+    #     for _, _, actualRating, _, _ in completedPredictions:
+    #         if actualRating >= threshold:
+    #             numRelevant += 1
+    #
+    #     for userID, movieList in topNPred.items():
+    #         for _, _, actualRating in movieList:
+    #             if actualRating >= threshold:
+    #                 numRecommendRelevant += 1
+    #
+    #     return round(numRecommendRelevant / numRelevant , self.NUM_DIGITS)
 
 
 
@@ -319,8 +328,8 @@ class algorithm_eval:
             metrics["Coverage"] = self.userCoverage(topNPredictions)
             metrics["Novelty"] = self.novelty(topNPredictions, evaluationDataSet.GetPopularRankings())
 
-            metrics["Precision"] = self.precision(topNPredictionsWithActual)
-            metrics["Recall"] = self.recall(topNPredictionsWithActual, self.algorithm.test(evaluationDataSet.GetFullTestData()))
+            # metrics["Precision"] = self.precision(topNPredictionsWithActual)
+            # metrics["Recall"] = self.recall(topNPredictionsWithActual, self.algorithm.test(evaluationDataSet.GetFullTestData()))
             # TODO: what the heck is this GetFullTestData?
 
         # Compute accuracy
