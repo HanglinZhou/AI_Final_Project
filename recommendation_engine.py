@@ -19,7 +19,13 @@ evaluator = Evaluator()
 
 #call MFalgo generate algo
 #call KNNalgo generate algo
-# knn_algo = knn.KnnAlgo()
+knn_algo = knn.untuned_knn_algo()
+
+# tune knn algo
+tuned_knn_algo = {}
+best_k = {}
+for key in knn_algo:
+    best_k[key], tuned_knn_algo[key] = knn.analyze_knn_model(ratings,key)
 
 #use random as our basline here
 Random = NormalPredictor()
