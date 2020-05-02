@@ -37,13 +37,14 @@ class Evaluator:
 
 
         if(TopN):
-            print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} ".format(
-                "Algorithm", "RMSE", "MAE", "HR", "CHR","ARHR", "Diversity", "Precision", "Recall", "Coverage","Novelty"))
+            print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} ".format(
+                "Algorithm", "RMSE", "MAE", "HR", "CHR","ARHR", "Diversity", "Coverage","Novelty"))
             for(name, metrics) in result.items():
-                print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}{:<10}{:<10}".format(name, metrics["RMSE"], metrics["MAE"],metrics["HR"],
-                                                                                              metrics["CHR"], metrics["ARHR"],
-                                                                                              metrics["Diversity"],metrics["Precision"], metrics["Recall"],
-                                                                                              metrics["Coverage"],metrics["Novelty"], "Ratings HitRate"))
+                print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
+                      name, metrics["RMSE"], metrics["MAE"],metrics["HR"],
+                      metrics["CHR"], metrics["ARHR"],
+                      metrics["Diversity"], #metrics["Precision"], metrics["Recall"],
+                      metrics["Coverage"],metrics["Novelty"], "Ratings HitRate"))
                 print("RHR")
                 print("{:<10} {:<10}".format("Ratings", "HitRate"))
                 print(metrics["RHR"])

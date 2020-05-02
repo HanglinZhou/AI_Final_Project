@@ -38,13 +38,17 @@ for key in tuned_knn_algo:
     evaluator.Add_Algo(tuned_knn_algo[key],key)
 
 
+
 #use random as our basline here
 Random = NormalPredictor()
 evaluator.Add_Algo(Random, "Random")
+
+# adding MF algos
 mf_algo = MatrixFactorizationAlgo()
 mf_algo_dict = mf_algo.generate_algorithms(evaluationData)
 for key in mf_algo_dict:
     evaluator.Add_Algo(mf_algo_dict[key], key)
+
 
 
 
@@ -56,15 +60,26 @@ for key in mf_algo_dict:
 #     evaluator.Add_Algo(mf_algo_dict[key], key)
 
 
+# adding knn algos
+# knn_algo = knn.untuned_knn_algo()
+#
+# # tune knn algo
+# tuned_knn_algo = {}
+# best_k = {}
+# for key in knn_algo:
+#     best_k[key], tuned_knn_algo[key] = knn.analyze_knn_model(evaluationData,key)
+
+# adding hybrid algos
+# hybrid_weighted_algorithms = {'SVD' : mf_algo_dict['SVD'], 'NMF' : mf_algo_dict['NMF']}
+# hybrid_weighted_weights = {'SVD' : 0.7, 'NMF' :0.3}
+# hybrid_weighted = HybridAlgoWeighted(hybrid_weighted_algorithms, hybrid_weighted_weights)
+# evaluator.Add_Algo(hybrid_weighted, "Weighted Hybrid")
+
+
 # hybrid_weighted_algorithms = {'SVD_tuned' : mf_algo_dict['SVD_tuned'], 'NMF' : mf_algo_dict['NMF']}
 # hybrid_weighted_weights = {'SVD_tuned' : 0.7, 'NMF' :0.3}
 # hybrid_weighted = HybridAlgoWeighted(hybrid_weighted_algorithms, hybrid_weighted_weights)
 # evaluator.Add_Algo(hybrid_weighted, "Weighted Hybrid")
-
-hybrid_weighted_algorithms = {'SVD' : mf_algo_dict['SVD'], 'NMF' : mf_algo_dict['NMF']}
-hybrid_weighted_weights = {'SVD' : 0.7, 'NMF' :0.3}
-hybrid_weighted = HybridAlgoWeighted(hybrid_weighted_algorithms, hybrid_weighted_weights)
-evaluator.Add_Algo(hybrid_weighted, "Weighted Hybrid")
 
 # evaluate
 evaluator.print(True)
