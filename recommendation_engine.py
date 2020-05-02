@@ -35,11 +35,10 @@ for key in mf_algo_dict:
 for key in mf_algo_dict:
     evaluator.Add_Algo(mf_algo_dict[key], key)
 
-hybrid_weighted_algorithms = {'SVD_tuned' : mf_algo_dict['SVD_tuned'], 'NMF' : mf_algo_dict['NMF']}
-hybrid_weighted_weights = {'SVD_tuned' : 0.7, 'NMF' :0.3}
-hybrid_weighted = HybridAlgoWeighted(hybrid_weighted_algorithms, hybrid_weighted_weights)
-evaluator.Add_Algo(hybrid_weighted, "Weighted Hybrid")
+# hybrid_weighted_algorithms = {'SVD_tuned' : mf_algo_dict['SVD_tuned'], 'NMF' : mf_algo_dict['NMF']}
+# hybrid_weighted_weights = {'SVD_tuned' : 0.7, 'NMF' :0.3}
+# hybrid_weighted = HybridAlgoWeighted(hybrid_weighted_algorithms, hybrid_weighted_weights)
+# evaluator.Add_Algo(hybrid_weighted, "Weighted Hybrid")
 
 # evaluate
 evaluator.print(True)
-

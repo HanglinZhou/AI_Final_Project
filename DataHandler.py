@@ -12,9 +12,12 @@ from surprise import Reader
 
 class DataHandler:
 
-    rating = './ml-latest-small/ratings.csv'
-    movies = './ml-latest-small/movies.csv'
+    # rating = './ml-latest-small/ratings.csv'
+    # movies = './ml-latest-small/movies.csv'
 
+    # for testing purpose
+    rating = './test-data/ratings.csv'
+    movies = './test-data/movies.csv'
     def LoadRating(self):
         reader = Reader(line_format='user item rating timestamp', sep=',', skip_lines=1)
         return Dataset.load_from_file(self.rating, reader=reader)
@@ -107,7 +110,7 @@ class DataHandler:
     def GetLOOAntiTestSet(self):
         return self.LOOAntiTest
 
-    def rank(self):
+    def GetPopularRankings(self):
         return self.rank
 
     def GetSimilarities(self):

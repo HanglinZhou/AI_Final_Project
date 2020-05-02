@@ -37,12 +37,12 @@ class Evaluator:
             print(len(result))
 
         if(TopN):
-            print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
+            print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
                 "Algorithm", "RMSE", "MAE", "HR", "CHR","RHR", "ARHR", "FCP", "Diversity", "Coverage","Novelty"))
             for(name, metrics) in result.items():
-                print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
+                print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
                name, metrics["RMSE"], metrics["MAE"],
-                metrics["HR"], metrics["CHR"],metrics["RHR"], metrics["ARHR"],metrics["FCP"], metrics["Diversity"],
+                metrics["HR"], metrics["CHR"],metrics["RHR"], metrics["ARHR"], metrics["Diversity"],
                 metrics["Coverage"],metrics["Novelty"]))
         else:
             for (name, metrics) in result.items():
@@ -87,22 +87,3 @@ class Evaluator:
 
             for rating in recommendations[:N]:
                 print(movieList.getMovieName(rating[0]),rating[1])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
