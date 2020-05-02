@@ -63,11 +63,11 @@ class knn:
         blKNN = KNNBaseline(sim_options={'name': 'cosine', 'user_based': True})
         algo['blKNN'] = blKNN
 
-        param_grid_bc = {'k': [15, 20, 25, 30, 40, 50, 60]}
-        best_params_bc = self.tune_and_find_parameter('bcKNN', KNNBasic, rating_data, param_grid_bc)
-
-        bcKNN_tuned = KNNBasic(k=best_params_bc['k'])
-        algo.update({'bcKNN_tuned': bcKNN_tuned})
+        # param_grid_bl = {'k': [10, 15, 20, 25]}
+        # best_params_bl = self.tune_and_find_parameter('blKNN', KNNBaseline, rating_data, param_grid_bl)
+        #
+        # blKNN_tuned = KNNBaseline(k=best_params_bl['k'])
+        # algo.update({'blKNN_tuned': blKNN_tuned})
 
         return algo
 

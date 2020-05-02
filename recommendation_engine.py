@@ -22,11 +22,11 @@ evaluator = Evaluator()
 knngenerator = knn()
 #knn_algo = knngenerator.untuned_knn_algo()
 knn_algo = knngenerator.generate_knn(evaluationData)
+for key in knn_algo:
+    evaluator.Add_Algo(knn_algo[key],key)
 # tune knn algo
 # tuned_knn_algo = {}
 # best_k = {}
-for key in knn_algo:
-    evaluator.Add_Algo(knn_algo[key],key)
 
 # for key in knn_algo:
 #     name,tuned_knn_algo[name] = knngenerator.analyze_knn_model(evaluationData, key)
@@ -43,23 +43,24 @@ for key in knn_algo:
 Random = NormalPredictor()
 evaluator.Add_Algo(Random, "Random")
 
-# adding MF algos
-mf_algo = MatrixFactorizationAlgo()
-mf_algo_dict = mf_algo.generate_algorithms(evaluationData)
-for key in mf_algo_dict:
-    evaluator.Add_Algo(mf_algo_dict[key], key)
-
-
-
-
-
-
+# # adding MF algos
+# mf_algo = MatrixFactorizationAlgo()
+# mf_algo_dict = mf_algo.generate_algorithms(evaluationData)
+# for key in mf_algo_dict:
+#     evaluator.Add_Algo(mf_algo_dict[key], key)
 #use random as our basline here
+
 # for key in mf_algo_dict:
 #     evaluator.Add_Algo(mf_algo_dict[key], key)
 # mf_algo_dict = mf_algo.generate_algorithms(evaluationData)
 # for key in mf_algo_dict:
 #     evaluator.Add_Algo(mf_algo_dict[key], key)
+
+
+
+
+
+
 
 
 # adding knn algos

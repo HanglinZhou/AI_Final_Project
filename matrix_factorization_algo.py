@@ -54,23 +54,23 @@ class MatrixFactorizationAlgo:
         best_params_nmf = self.tune_and_find_param('NMF', NMF, rating_data, param_grid_nmf)
 
         # initiate tuned MF algos with tuned hyperparameters
-        SVD_tuned = SVD(n_factors = best_params_svd['n_factors'],
-                        n_epochs = best_params_svd['n_epochs'],
-                        lr_all = best_params_svd['lr_all'])
+        # SVD_tuned = SVD(n_factors = best_params_svd['n_factors'],
+        #                 n_epochs = best_params_svd['n_epochs'],
+        #                 lr_all = best_params_svd['lr_all'])
 
-        SVDpp_tuned = SVDpp(n_factors = best_params_svdpp['n_factors'],
-                        n_epochs = best_params_svdpp['n_epochs'],
-                        lr_all = best_params_svdpp['lr_all'])
-
-        NMF_tuned = NMF(n_factors = best_params_nmf['n_factors'],
-                        n_epochs = best_params_nmf['n_epochs'],
-                        lr_bu = best_params_nmf['lr_bu'],
-                        lr_bi = best_params_nmf['lr_bi'])
+        # SVDpp_tuned = SVDpp(n_factors = best_params_svdpp['n_factors'],
+        #                 n_epochs = best_params_svdpp['n_epochs'],
+        #                 lr_all = best_params_svdpp['lr_all'])
+        #
+        # NMF_tuned = NMF(n_factors = best_params_nmf['n_factors'],
+        #                 n_epochs = best_params_nmf['n_epochs'],
+        #                 lr_bu = best_params_nmf['lr_bu'],
+        #                 lr_bi = best_params_nmf['lr_bi'])
 
         # append new algos to result dict
-        algo.update({'SVD_tuned': SVD_tuned})
-        algo.update({'SVD++_tuned': SVDpp_tuned})
-        algo.update({'NMF_tuned': NMF_tuned})
+        # algo.update({'SVD_tuned': SVD_tuned})
+        # algo.update({'SVD++_tuned': SVDpp_tuned})
+        # algo.update({'NMF_tuned': NMF_tuned})
         print('Generated algo object for SVD_tuned, SVD++_tuned, and NMF_tuned.')
 
         # algo = {'SVD': SVD(), 'SVD++': SVDpp(), 'NMF': NMF()}
