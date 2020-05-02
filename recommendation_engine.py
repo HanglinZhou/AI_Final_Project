@@ -34,6 +34,10 @@ for key in knn_algo:
 print("tune added")
 
 
+for key in tuned_knn_algo:
+    print(type(tuned_knn_algo[key]))
+    evaluator.Add_Algo(tuned_knn_algo[key],key)
+
 
 
 #use random as our basline here
@@ -46,9 +50,6 @@ mf_algo_dict = mf_algo.generate_algorithms(evaluationData)
 for key in mf_algo_dict:
     evaluator.Add_Algo(mf_algo_dict[key], key)
 
-for key in tuned_knn_algo:
-    print(type(tuned_knn_algo[key]))
-    evaluator.Add_Algo(tuned_knn_algo[key],key)
 
 
 
