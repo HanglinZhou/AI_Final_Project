@@ -15,11 +15,17 @@ rankings = dataprocessor.getRank()
 evaluator = Evaluator()
 
 #construct evaluator
-evaluator = Evaluator()
+# evaluator = Evaluator()
 
 #call MFalgo generate algo
 #call KNNalgo generate algo
-# knn_algo = knn.KnnAlgo()
+knn_algo = knn.untuned_knn_algo()
+
+# tune knn algo
+tuned_knn_algo = {}
+best_k = {}
+for key in knn_algo:
+    best_k[key], tuned_knn_algo[key] = knn.analyze_knn_model(evaluationData,key)
 
 #use random as our basline here
 Random = NormalPredictor()
@@ -30,8 +36,12 @@ for key in mf_algo_dict:
     evaluator.Add_Algo(mf_algo_dict[key], key)
 
 #use random as our basline here
-for key in mf_algo_dict:
-    evaluator.Add_Algo(mf_algo_dict[key], key)
+# for key in mf_algo_dict:
+#     evaluator.Add_Algo(mf_algo_dict[key], key)
+# mf_algo_dict = mf_algo.generate_algorithms(evaluationData)
+# for key in mf_algo_dict:
+#     evaluator.Add_Algo(mf_algo_dict[key], key)
+
 
 # hybrid_weighted_algorithms = {'SVD_tuned' : mf_algo_dict['SVD_tuned'], 'NMF' : mf_algo_dict['NMF']}
 # hybrid_weighted_weights = {'SVD_tuned' : 0.7, 'NMF' :0.3}
