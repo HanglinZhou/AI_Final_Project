@@ -35,17 +35,22 @@ class MatrixFactorizationAlgo:
     def generate_algorithms(self, rating_data):
         # here we separate untuned and tuned algo as it might take a really long time on tuning,
         # it's easier to comment out the tuning part if needed
-        algo = {'SVD': SVD(), 'PMF': SVD(biased=False), 'SVD++': SVDpp(), 'NMF': NMF()}
+        # algo = {'SVD': SVD(), 'PMF': SVD(biased=False), 'SVD++': SVDpp(), 'NMF': NMF()}
+        algo = {}
+        algo.update({'SVD': SVD()})
+        algo.update({'PMF': SVD(biased=False)})
+        algo.update({'SVD++': SVDpp()})
+        algo.update({'NMF': NMF()})
         print('Generated algo object for SVD, PMF, SVD++, and NMF.')
 
         # generate tuned SVD algorithm
-        param_grid_svd = {'n_factors': [100, 150], 'n_epochs': [10, 20], 'lr_all': [0.010, 0.015]}
+        param_grid_svd = {'n_factors': [130, 135], 'n_epochs': [50, 57], 'lr_all': [0.0017, 0.002]}
         best_params_svd = self.tune_and_find_param('SVD', SVD, rating_data, param_grid_svd)
 
-        param_grid_svdpp = {'n_factors': [30, 50], 'n_epochs': [10, 20], 'lr_all': [0.010, 0.015]}
+        param_grid_svdpp = {'n_factors': [20, 30], 'n_epochs': [15, 25], 'lr_all': [0.005, 0.0085]}
         best_params_svdpp = self.tune_and_find_param('SVD++', SVDpp, rating_data, param_grid_svdpp)
 
-        param_grid_nmf = {'n_factors': [30, 50], 'n_epochs': [30, 40], 'lr_bu': [0.010, 0.015], 'lr_bi': [0.010, 0.015]}
+        param_grid_nmf = {'n_factors': [50, 55], 'n_epochs': [45, 50], 'lr_bu': [0.02, 0.025], 'lr_bi': [0.02, 0.025]}
         best_params_nmf = self.tune_and_find_param('NMF', NMF, rating_data, param_grid_nmf)
 
         # initiate tuned MF algos with tuned hyperparameters
