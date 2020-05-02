@@ -39,26 +39,28 @@ class MatrixFactorizationAlgo:
         print('Generated algo object for SVD, PMF, SVD++, and NMF, tuned SVD, and tuned SVD++.')
 
         print('Tuning SVD parameters: ')
-        best_params_svd = self.tune_and_find_param('SVD_tuned', SVD, rating_data)
-        SVD_tuned = SVD(n_factors = best_params_svd['n_factors'], n_epochs = best_params_svd['n_epochs'],
-                        lr_all = best_params_svd['lr_all'], reg_all = best_params_svd['reg_all'])
+        # param_grid_svd = {'n_factors': [10, 200], 'n_epochs': [20, 50], 'lr_all': [0.001, 0.020],
+        #               'reg_all': [0.010, 0.030]}
+        # best_params_svd = self.tune_and_find_param('SVD_tuned', SVD, rating_data, param_grid_svd)
+        # SVD_tuned = SVD(n_factors = best_params_svd['n_factors'], n_epochs = best_params_svd['n_epochs'],
+        #                 lr_all = best_params_svd['lr_all'], reg_all = best_params_svd['reg_all'])
 
         print('Tuning SVD++ parameters: ')
-        best_params_svdpp = self.tune_and_find_param('SVD++_tuned', SVDpp, rating_data)
+        param_grid_svdpp = {'n_factors': [50, 100], 'n_epochs': [20, 50], 'lr_all': [0.001, 0.010],
+                          'reg_all': [0.015, 0.025]}
+        best_params_svdpp = self.tune_and_find_param('SVD++_tuned', SVDpp, rating_data, param_grid_svdpp)
 
         SVDpp_tuned = SVDpp(n_factors = best_params_svdpp['n_factors'], n_epochs = best_params_svdpp['n_epochs'],
                         lr_all = best_params_svdpp['lr_all'], reg_all = best_params_svdpp['reg_all'])
 
-        algo['SVD_tuned'] =  SVD_tuned
+        # algo['SVD_tuned'] =  SVD_tuned
         algo['SVD++_tuned'] = SVDpp_tuned
         print('Generated algo object for tuned SVD and tuned SVD++.')
 
         return algo
 
 
-    def tune_and_find_param(self, algo_name, algo, rating_data):
-        param_grid = {'n_factors': [10, 200], 'n_epochs': [20, 50], 'lr_all': [0.001, 0.020],
-                          'reg_all': [0.010, 0.030]}
+    def tune_and_find_param(self, algo_name, algo, rating_data, param_grid):
         # use GridSearchCVcomputes which (from surpise documentation)
         # computes accuracy metrics for an algorithm on various combinations of parameters, over a cross-validation procedure.
         grid_search = GridSearchCV(algo, param_grid)
