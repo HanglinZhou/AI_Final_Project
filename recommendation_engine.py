@@ -28,8 +28,6 @@ mf_algo = MatrixFactorizationAlgo()
 mf_algo_dict = mf_algo.generate_algorithms(evaluationData)
 for key in mf_algo_dict:
     evaluator.Add_Algo(mf_algo_dict[key], key)
-    #why svd print twice?? the second time no
-
 
 #use random as our basline here
 for key in mf_algo_dict:

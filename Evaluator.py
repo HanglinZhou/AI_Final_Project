@@ -37,8 +37,8 @@ class Evaluator:
             print(len(result))
 
         if(TopN):
-            print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
-                "Algorithm", "RMSE", "MAE", "HR", "CHR","RHR", "ARHR", "FCP", "Diversity", "Coverage","Novelty"))
+            print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
+                "Algorithm", "RMSE", "MAE", "HR", "CHR","RHR", "ARHR", "Diversity", "Coverage","Novelty"))
             for(name, metrics) in result.items():
                 print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
                name, metrics["RMSE"], metrics["MAE"],
@@ -55,7 +55,6 @@ class Evaluator:
             print("CHR: Cumulative Hit Rate")
             print("RHR: Rating Hit Rate ")
             print("ARHR: Average Rank Hit Rate")
-            print("FCP: Fraction of Concordant Pairs")
             print("Diversity: 1-Similarity")
             print("Coverage: Ratio of users for whom recommendations above a certain threshold exist.")
             print("Novelty: Average popularity rank of recommended items.")

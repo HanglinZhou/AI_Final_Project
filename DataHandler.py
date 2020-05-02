@@ -58,6 +58,7 @@ class DataHandler:
         self.fullTrainData = self.fulldata.build_full_trainset()
         #build the full anti data test set
         self.fullAntiTestData = self.fullTrainData.build_anti_testset()
+        self.fullTestData = self.fullTrainData.build_testset()
 
         #get 80% train data and 20% test data
         self.traindata, self.testdata = train_test_split(self.fulldata, test_size=0.2)
@@ -96,6 +97,8 @@ class DataHandler:
         antiUserDataSet+=[(trainset.to_raw_uid(uidint),trainset.to_raw_iid(i),temp) for i in trainset.all_items()
                           if i not in user_watched_movies] #since we find the data in the pandas later, we record the raw id
         return antiUserDataSet
+    def GetFullTestData(self):
+        return self.fullTestData
 
     def GetTrainData(self):
         return self.traindata

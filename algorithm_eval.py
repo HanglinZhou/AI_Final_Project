@@ -34,24 +34,30 @@ class algorithm_eval:
         return round(accuracy.rmse(predictions, verbose=False), self.NUM_DIGITS)
 
     # return a map w/
-    # key: user, value: a list of top n estRating movies (movieID, estRating)
+    #     key: user, value: a list of top n estRating movies (movieID, estRating)
     # TODO: n change to 10
-    def getTopN(self,predictions, n=50, ratingCutOff=4.0):
+    def getTopN(self, predictions, n=50, ratingCutOff=4.0):
         # create a map - key: userID, value: a list of (movieID, estRating)
         res = defaultdict(list)
+        res2 = defaultdict(list) # list with actualRating
+
 
         for userID, movieID, actlRating, estRating, _ in predictions:
             # if estRating is larger than rating cut-off, add the movies w/
             # estRating to the topN list of the corresponding user
             if (estRating >= ratingCutOff):
                 res[int(userID)].append((int(movieID), estRating))
-
+                res2[int(userID)].append((int(movieID), estRating, actlRating))
         # for each user-list pair, sort the list by estRating, and keep top # N
         for userID, movieList in res.items():
             sorted(movieList, key=lambda x:x[1], reverse=True)
             res[userID] = movieList[0:n] # keep top N
 
-        return res
+        for userID, movieList in res2.items():
+            sorted(movieList, key=lambda x:x[1], reverse=True)
+            res2[userID] = movieList[0:n] # keep top N
+
+        return res, res2
 
     # def hitRate(self, topNPred, leftOutData):
     #     return -1
@@ -232,6 +238,45 @@ class algorithm_eval:
                 numMovies += 1
         return round(totalNovelty / numMovies, self.NUM_DIGITS)
 
+    # returns number of recommended movies that are relevant / recommended movies
+    #    a movie is relevant if its actual rating is greater than a given threshold
+    # @topNPred: a dictionary w/ key: userID,
+    #                            value: list of top N ratings (moviesID, estRating, actualRating)
+    # @threshold: threshold for a movie to be considered as revelant
+    def precision(self, topNPred, threshold=3.5):
+        numRelevant = 0
+        numRecommend = 0
+
+        # for each user, get num of relevant movies
+        for userID, movieList in topNPred.items():
+            for _, _, actualRating in movieList: # if relevant
+                if actualRating >= threshold:
+                    numRelevant += 1
+                numRecommend += 1
+        return round(numRelevant / numRecommend, self.NUM_DIGITS)
+
+    # returns num recommended movies that are relevant / relevant movies
+    #    a movie is relevant if its actual rating is greater than a given threshold
+    # @topNPred: a dictionary w/ key: userID,
+    #                            value: list of top N ratings (moviesID, estRating, actualRating)
+    # @completedPredictions: predictions for all movies and all users
+    # @threshold: threshold for a movie to be considered as revelant
+    def recall(self, topNPred, completedPredictions, threshold=3.5):
+        numRelevant = 0
+        numRecommendRelevant = 0
+        # get all relevant movies
+        for _, _, actualRating, _, _ in completedPredictions:
+            print(actualRating)
+            if actualRating >= threshold:
+                numRelevant += 1
+
+        for userID, movieList in topNPred.items():
+            for _, _, actualRating in movieList:
+                if actualRating >= threshold:
+                    numRecommendRelevant += 1
+
+        return round(numRecommendRelevant / numRelevant , self.NUM_DIGITS)
+
 
 
     def evaluate(self, evaluationDataSet, TopN, n=10, verbose=True):
@@ -252,8 +297,8 @@ class algorithm_eval:
             self.algorithm.fit(evaluationDataSet.GetLOOTrain())
             #Prepare for the left one out cross validation
             looPredictions = self.algorithm.test(evaluationDataSet.GetLOOTest())
-            actuaPredictions = self.algorithm.test(evaluationDataSet.GetLOOAntiTestSet())
-            topNPredictions = self.getTopN(actuaPredictions)
+            actualPredictions = self.algorithm.test(evaluationDataSet.GetLOOAntiTestSet())
+            topNPredictions, topNPredictionsWithActual = self.getTopN(actualPredictions)
             metrics["HR"] = self.hitRate(topNPredictions, looPredictions)
             metrics["CHR"] =self.cumulativeHitRate(topNPredictions,looPredictions)
             metrics["RHR"] = self.ratingHitRate(topNPredictions,looPredictions)
@@ -262,6 +307,10 @@ class algorithm_eval:
             metrics["Diversity"] = self.diversity(topNPredictions, evaluationDataSet.GetSimilarities())
             metrics["Coverage"] = self.userCoverage(topNPredictions)
             metrics["Novelty"] = self.novelty(topNPredictions, evaluationDataSet.GetPopularRankings())
+
+            metrics["Precision"] = self.precision(topNPredictionsWithActual)
+            metrics["Recall"] = self.recall(topNPredictionsWithActual, self.algorithm.test(evaluationDataSet.GetFullTestData()))
+            # TODO: what the heck is this GetFullTestData?
 
         # Compute accuracy
         return metrics
