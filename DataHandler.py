@@ -51,6 +51,7 @@ class DataHandler:
         # build the full data
 
         self.fulldata = self.LoadRating()
+        self.fulldata = self.fulldata
         self.popularitydata = self.loadPopularityData()
         self.fullTrainData = self.fulldata.build_full_trainset()
         #build the full anti data test set

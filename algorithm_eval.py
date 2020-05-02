@@ -2,7 +2,7 @@
 # generate recommendations, and then report accuracy date
 from surprise import accuracy
 from collections import defaultdict
-from DataHandler import DataHandler
+#from DataHandler import DataHandler
 
 class algorithm_eval:
     # constructor
@@ -198,6 +198,7 @@ class algorithm_eval:
             #Prepare for the left one out cross validation
             looPredictions = self.algorithm.test(evaluationDataSet.GetLOOTest())
             actuaPredictions = self.algorithm.test(evaluationDataSet.GetLOOAntiTestSet())
+            #Prepare for top-N evaluations
             topNPredictions = self.getTopN(actuaPredictions)
             metrics["HR"] = self.hitRate(looPredictions,topNPredictions)
             metrics["CHR"] =self.cumulativeHitRate(topNPredictions,looPredictions)
