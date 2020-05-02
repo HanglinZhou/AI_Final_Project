@@ -65,19 +65,7 @@ class algorithm_eval:
 
         return res, res2
 
-    # def hitRate(self, topNPred, leftOutData):
-    #     return -1
-    #
-    # def cumulativeHitRate(self, topNPred, leftOutData, ratingCutOff=3.0):
-    #     return -1
-    #
-    # def ratingHitRate(self, topNPred, leftOutPred):
-    #     return -1
-    #
-    # def avrgReciprocalHitRank(self, topNPred, leftOutData):
-    #     return -1
 
-    # returns numHits / totalLeftOut
     # @topNPred: a dictionary w/ key: userID,
     #                            value: list of top N ratings (moviesID, estRating)
     # leftOutData: a list of left out data with high ratings from training set

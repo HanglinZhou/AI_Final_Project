@@ -18,7 +18,7 @@ class HybridAlgoWeighted(AlgoBase):
         AlgoBase.__init__(self)
         if (sum(weights.values()) - 1) != 0:
             raise Exception("Attention, sum of weights need to be 1")
-        print("in constructor, algos:", type(algorithms))
+       # print("in constructor, algos:", type(algorithms))
         self.algorithms = algorithms
         self.weights = weights
 
@@ -33,11 +33,11 @@ class HybridAlgoWeighted(AlgoBase):
 
     # derived from AlgoBase: u as uid: (Raw) id of the user; i as iid: (Raw) id of the item.
     def estimate(self, u, i):
-        print('Hybrid Algo included (algo with weight): ')
+        #print('Hybrid Algo included (algo with weight): ')
         for algo in self.algorithms:
             # sum of (each algo's estimate * its weight) = weighted_estimate
-            print('', algo, ' with ', self.weights[algo])
+            #print('', algo, ' with ', self.weights[algo])
             self.weighted_estimate += self.algorithms[algo].estimate(u, i) * self.weights[algo]
 
-        print('Hybrid Algo Weighted estimate: ', self.weighted_estimate)
+        #print('Hybrid Algo Weighted estimate: ', self.weighted_estimate)
         return self.weighted_estimate

@@ -80,13 +80,25 @@ class MatrixFactorizationAlgo:
         # algo = {'SVD': SVD()}
         # print('Generated algo object for SVD')
 
+
+        # algo = {'SVD': SVD(), 'PMF': SVD(biased=False), 'SVD++': SVDpp(), 'NMF': NMF()}
+        # print('Generated algo object for SVD, PMF, SVD++, and NMF, tuned SVD, and tuned SVD++.')
+
+        # print('Tuning SVD parameters: ')
+        #
+        #primary comment start
+        # param_grid_svd = {'n_factors': [10, 200], 'n_epochs': [20, 50], 'lr_all': [0.001, 0.020],
+
         # print('Tuning SVD parameters: ')
         # param_grid_svd = {'n_factors': [50, 100], 'n_epochs': [20, 30], 'lr_all': [0.005, 0.010],
+
         #               'reg_all': [0.010, 0.030]}
         # best_params_svd = self.tune_and_find_param('SVD_tuned', SVD, rating_data, param_grid_svd)
         # SVD_tuned = SVD(n_factors = best_params_svd['n_factors'], n_epochs = best_params_svd['n_epochs'],
         #                 lr_all = best_params_svd['lr_all'], reg_all = best_params_svd['reg_all'])
 
+
+        #primary comment end
         # print('Tuning SVD++ parameters: ')
         # param_grid_svdpp = {'n_factors': [50, 100], 'n_epochs': [20, 50], 'lr_all': [0.001, 0.010],
         #                   'reg_all': [0.015, 0.025]}
@@ -95,7 +107,11 @@ class MatrixFactorizationAlgo:
         # SVDpp_tuned = SVDpp(n_factors = best_params_svdpp['n_factors'], n_epochs = best_params_svdpp['n_epochs'],
         #                 lr_all = best_params_svdpp['lr_all'], reg_all = best_params_svdpp['reg_all'])
 
+        #
+        # # algo['SVD_tuned'] =  SVD_tuned
+
         # algo['SVD_tuned'] =  SVD_tuned
+
         # algo['SVD++_tuned'] = SVDpp_tuned
         # print('Generated algo object for tuned SVD and tuned SVD++.')
 

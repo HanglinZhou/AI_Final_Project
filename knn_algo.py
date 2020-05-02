@@ -15,12 +15,12 @@ from surprise import KNNWithMeans
 from surprise import KNNBaseline
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
-#from EvaluationDataSet import EvaluationData
+
 from sklearn.model_selection import train_test_split
 from pathlib import Path
 import pandas as pd
 from surprise.model_selection import cross_validate
-#from data_processor import DataProcessor
+
 import numpy as np
 from matplotlib.legend_handler import HandlerLine2D
 import matplotlib.pyplot as plt
@@ -29,10 +29,9 @@ from surprise import Reader
 class knn:
 
     # Return knn algorithms in sequence of
-    def untuned_knn_algo():
+    def untuned_knn_algo(self):
 
         algo = {}
-
         # User-based KNN cosine similarity
         bcKNN = KNNBasic(sim_options={'name': 'cosine', 'user_based': True})
         algo['bcKNN'] = bcKNN
@@ -49,7 +48,7 @@ class knn:
         return algo
 
     # tuning by k-fold using cross-validation
-    def knnBasic_tune(ratings,str):
+    def knnBasic_tune(self,ratings,str):
 
         # creating odd list of K for KNN
         neighbors = list(range(1, 55, 4))
@@ -67,8 +66,8 @@ class knn:
 
         # perform 10-fold cross validation
         for k in neighbors:
-            algo = knn.get_knn_algo(str,k)
-            test = cross_validate(algo, ratings, measures=['RMSE', 'MAE'], cv=5, verbose = True)
+            algo = self.get_knn_algo(str,k)
+            test = cross_validate(algo, ratings, measures=['RMSE', 'MAE'], cv=5, verbose = False)
             cv_scores.append(test)
 
             # get mean train rmse
@@ -82,30 +81,31 @@ class knn:
         return (cv_scores, rmse_train_scores, mae_train_scores)
 
 
-    def analyze_knn_model(ratings,str):
-        (cv, rmse, mae) = knn.knnBasic_tune(ratings,str)
+    def analyze_knn_model(self,ratings, name):
+        (cv, rmse, mae) = self.knnBasic_tune(ratings,name)
         neighbors = list(range(1, 15))
 
         # plot rmse score
         plt.plot(neighbors, rmse)
-        plt.xlabel('Value of K for ' + str)
+        plt.xlabel('Value of K for ' + name)
         plt.ylabel('rmse')
         plt.show()
 
         # plot mae score
         plt.plot(neighbors, mae)
-        plt.xlabel('Value of K for ' + str)
+        plt.xlabel('Value of K for ' + name)
         plt.ylabel('mae')
         plt.show()
 
         # contruct knn algo with smallest rmse score
         k = rmse.index(min(rmse)) + 1
-        tuned_algo = knn.get_knn_algo(str, k)
+        tuned_algo = self.get_knn_algo(name, k)
+        addedname = "tuned"+name
 
-        return (k,tuned_algo)
+        return (addedname,tuned_algo)
 
 
-    def get_knn_algo(str,k):
+    def get_knn_algo(self,str,k):
         if(str == 'bcKNN'):
             return KNNBasic(k = k, min = k, sim_options={'name': 'cosine', 'user_based': True},verbose = False)
         elif(str == 'wmKNN'):
