@@ -100,8 +100,9 @@ class knn:
         # contruct knn algo with smallest rmse score
         k = rmse.index(min(rmse)) + 1
         tuned_algo = self.get_knn_algo(name, k)
+        addedname = "tuned"+name
 
-        return tuned_algo
+        return (addedname,tuned_algo)
 
 
     def get_knn_algo(self,str,k):

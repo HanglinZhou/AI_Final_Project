@@ -29,13 +29,10 @@ for key in knn_algo:
     evaluator.Add_Algo(knn_algo[key],key)
 
 for key in knn_algo:
-    print(type(key))
-    tuned_knn_algo[key] = knngenerator.analyze_knn_model(evaluationData, key)
+    name,tuned_knn_algo[name] = knngenerator.analyze_knn_model(evaluationData, key)
 
 print("tune added")
 
-for key in tuned_knn_algo:
-    evaluator.Add_Algo(tuned_knn_algo[key],key)
 
 
 
@@ -48,6 +45,11 @@ mf_algo = MatrixFactorizationAlgo()
 mf_algo_dict = mf_algo.generate_algorithms(evaluationData)
 for key in mf_algo_dict:
     evaluator.Add_Algo(mf_algo_dict[key], key)
+
+for key in tuned_knn_algo:
+    print(type(tuned_knn_algo[key]))
+    evaluator.Add_Algo(tuned_knn_algo[key],key)
+
 
 
 
