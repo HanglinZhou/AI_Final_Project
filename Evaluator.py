@@ -37,8 +37,8 @@ class Evaluator:
 
 
         if(TopN):
-            print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} ".format(
-                "Algorithm", "RMSE", "MAE", "HR", "CHR","ARHR", "Diversity", "Coverage","Novelty"))
+            print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} ".format(
+                "Algorithm", "RMSE", "MAE", "HR", "CHR","ARHR", "Diversity", "Precision", "Recall", "Coverage","Novelty"))
             for(name, metrics) in result.items():
                 print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}{:<10}{:<10}".format(name, metrics["RMSE"], metrics["MAE"],metrics["HR"],
                                                                                               metrics["CHR"], metrics["ARHR"],
