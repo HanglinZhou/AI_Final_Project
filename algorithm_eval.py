@@ -255,7 +255,7 @@ class algorithm_eval:
     # @topNPred: a dictionary w/ key: userID,
     #                            value: list of top N ratings (moviesID, estRating, actualRating)
     # @threshold: threshold for a movie to be considered as revelant
-    def precision(self, topNPred, threshold=3.5):
+    def precision(self, topNPred, threshold=2.5):
         numRelevant = 0
         numRecommend = 0
 
@@ -278,7 +278,6 @@ class algorithm_eval:
         numRecommendRelevant = 0
         # get all relevant movies
         for _, _, actualRating, _, _ in completedPredictions:
-            print(actualRating)
             if actualRating >= threshold:
                 numRelevant += 1
 
@@ -309,14 +308,8 @@ class algorithm_eval:
             self.algorithm.fit(evaluationDataSet.GetLOOTrain())
             #Prepare for the left one out cross validation
             looPredictions = self.algorithm.test(evaluationDataSet.GetLOOTest())
-<<<<<<< HEAD
             actualPredictions = self.algorithm.test(evaluationDataSet.GetLOOAntiTestSet())
             topNPredictions, topNPredictionsWithActual = self.getTopN(actualPredictions)
-=======
-            actuaPredictions = self.algorithm.test(evaluationDataSet.GetLOOAntiTestSet())
-            #Prepare for top-N evaluations
-            topNPredictions = self.getTopN(actuaPredictions)
->>>>>>> 13193022901c7874e656efb48d53f2c3917d631d
             metrics["HR"] = self.hitRate(topNPredictions, looPredictions)
             metrics["CHR"] =self.cumulativeHitRate(topNPredictions,looPredictions)
             metrics["RHR"] = self.ratingHitRate(topNPredictions,looPredictions)
