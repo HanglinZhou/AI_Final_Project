@@ -19,13 +19,24 @@ evaluator = Evaluator()
 
 #call MFalgo generate algo
 #call KNNalgo generate algo
-knn_algo = knn.untuned_knn_algo()
+knngenerator = knn()
+knn_algo = knngenerator.untuned_knn_algo()
 
 # tune knn algo
 tuned_knn_algo = {}
 best_k = {}
 for key in knn_algo:
-    best_k[key], tuned_knn_algo[key] = knn.analyze_knn_model(evaluationData,key)
+    evaluator.Add_Algo(knn_algo[key],key)
+
+for key in knn_algo:
+    print(type(key))
+    tuned_knn_algo[key] = knngenerator.analyze_knn_model(evaluationData, key)
+
+print("tune added")
+
+for key in tuned_knn_algo:
+    evaluator.Add_Algo(tuned_knn_algo[key],key)
+
 
 #use random as our basline here
 Random = NormalPredictor()
@@ -34,6 +45,8 @@ mf_algo = MatrixFactorizationAlgo()
 mf_algo_dict = mf_algo.generate_algorithms(evaluationData)
 for key in mf_algo_dict:
     evaluator.Add_Algo(mf_algo_dict[key], key)
+
+
 
 #use random as our basline here
 # for key in mf_algo_dict:
