@@ -90,7 +90,7 @@ class algorithm_eval:
             actualRating = data[2]
             # if actual rating of left out movie >= cut off rating,
             # count hit if there exists one
-            if (actualRating >= ratingCutOff)
+            if (actualRating >= ratingCutOff):
                 userID = int(data[0])
                 movieID = int(data[1])
 
@@ -163,4 +163,4 @@ class algorithm_eval:
         return -1
 
     def novelty(topNPred, rankings):
-        return -1re
+        return -1

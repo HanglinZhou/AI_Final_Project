@@ -19,11 +19,16 @@ from EvaluationDataSet import EvaluationData
 from sklearn.model_selection import train_test_split
 from pathlib import Path
 import pandas as pd
+from surprise.model_selection import cross_validate
+from data_processor import DataProcessor
+import numpy as np
+from matplotlib.legend_handler import HandlerLine2D
+import matplotlib.pyplot as plt
 
 class knn:
 
     # Return knn algorithms in sequence of
-    def UntunedknnAlgorithms():
+    def untuned_knn_algo():
 
         algo = {}
 
@@ -42,75 +47,68 @@ class knn:
 
         return algo
 
-    # tuning by k-fold cross-validation
-    def KnnAlgo():
+    # tuning by k-fold using cross-validation
+    def knnBasic_tune(ratings,str):
 
-        algo = knn.UntunedknnAlgorithms()
+        # creating odd list of K for KNN
+        neighbors = list(range(1, 30, 2))
 
-        # List Hyperparameters that we want to tune.
-        leaf_size = list(range(1, 50))
-        n_neighbors = list(range(1, 30))
-        p = [1, 2]
-        # Convert to dictionary
-        hyperparameters = dict(leaf_size=leaf_size, n_neighbors=n_neighbors, p=p)
+        # empty list that will hold cv scores
+        cv_scores = []
 
-        # Use GridSearch
-        bcKNN = GridSearchCV(algo['bcKNN'],param_grid=hyperparameters,scoring='accuracy',cv=10)
+        # empty list that will hold RMSE mean train scores
+        rmse_train_scores = []
 
-        # get data
-        x_train = knn.data_split()
+        # empty list that will hold MAE mean train scores
+        mae_train_scores = []
 
-        # Fit the model
-        bcKNN.fit(x_train)
-        # # Print The value of best Hyperparameters
-        # print('bc KNN Best leaf_size:', tunedbcKNN.best_estimator_.get_params()['leaf_size'])
-        # print('bc KNN Best p:', tunedbcKNN.best_estimator_.get_params()['p'])
-        # print('bc KNN Best n_neighbors:', tunedbcKNN.best_estimator_.get_params()['n_neighbors'])
+        print("tuning " + str)
 
-        algo['tunedbcKNN'] = bcKNN
+        # perform 10-fold cross validation
+        for k in neighbors:
+            algo = knn.get_knn_algo(str,k)
+            test = cross_validate(algo, ratings, measures=['RMSE', 'MAE'], cv=10, verbose = True)
+            cv_scores.append(test)
 
-        # # Use GridSearch
-        # clf = GridSearchCV(algo['wmKNN'], hyperparameters, cv=10)
-        #
-        # # Fit the model
-        # tunedwmKNN = clf.fit(x_train)
-        # # Print The value of best Hyperparameters
-        # print('wm KNN Best leaf_size:', tunedwmKNN.best_estimator_.get_params()['leaf_size'])
-        # print('wm KNN Best p:', tunedwmKNN.best_estimator_.get_params()['p'])
-        # print('wm KNN Best n_neighbors:', tunedwmKNN.best_estimator_.get_params()['n_neighbors'])
-        #
-        # algo['tunedwmKNN'] = tunedwmKNN
-        #
-        # # Use GridSearch
-        # clf = GridSearchCV(algo['wzKNN'], hyperparameters, cv=10)
-        #
-        # # Fit the model
-        # tunedwzKNN = clf.fit(x_train)
-        # # Print The value of best Hyperparameters
-        # print('wz KNN Best leaf_size:', tunedwzKNN.best_estimator_.get_params()['leaf_size'])
-        # print('wz KNN Best p:', tunedwzKNN.best_estimator_.get_params()['p'])
-        # print('wz KNN Best n_neighbors:', tunedwzKNN.best_estimator_.get_params()['n_neighbors'])
-        #
-        # algo['tunedwzKNN'] = tunedwzKNN
-        #
-        # # Use GridSearch
-        # clf = GridSearchCV(algo["blKNN"], hyperparameters, cv=10)
-        #
-        # # Fit the model
-        # tunedblKNN = clf.fit(x_train)
-        # # Print The value of best Hyperparameters
-        # print('bl KNN Best leaf_size:', tunedblKNN.best_estimator_.get_params()['leaf_size'])
-        # print('bl KNN Best p:', tunedblKNN.best_estimator_.get_params()['p'])
-        # print('bl KNN Best n_neighbors:', tunedblKNN.best_estimator_.get_params()['n_neighbors'])
-        #
-        # algo['tunedblKNN'] = tunedblKNN
+            # get mean train rmse
+            rmse = test['test_rmse']
+            rmse_train_scores.append(np.sum(rmse)/10)
 
-        return algo
-    
-    def data_split():
-        data_path = Path("./data/movieLens/")
-        ratings = pd.read_csv(data_path / "ratings.csv")
-        # Split data into training and testing.
-        x_train, x_test = train_test_split(ratings, test_size=0.2)
-        return(x_train)
-        
+            # get mean train mae
+            mae = test['test_mae']
+            mae_train_scores.append(np.sum(mae)/10)
+
+        return (cv_scores, rmse_train_scores, mae_train_scores)
+
+
+    def analyze_knn_model(ratings,str):
+        (cv, rmse, mae) = knn.knnBasic_tune(ratings,str)
+        neighbors = list(range(1, 16))
+
+        # plot rmse score
+        plt.plot(neighbors, rmse)
+        plt.xlabel('Value of K for ' + str)
+        plt.ylabel('rmse')
+        plt.show()
+
+        # plot mae score
+        plt.plot(neighbors, mae)
+        plt.xlabel('Value of K for ' + str)
+        plt.ylabel('mae')
+        plt.show()
+
+        # contruct knn algo with smallest rmse score
+        tuned_algo = knn.get_knn_algo(str, rmse.index(min(rmse)) + 1)
+
+        return tuned_algo
+
+
+    def get_knn_algo(str,k):
+        if(str == 'bcKNN'):
+            return KNNBasic(k = k, min = k, sim_options={'name': 'cosine', 'user_based': True},verbose = False)
+        elif(str == 'wmKNN'):
+            return KNNWithMeans(k = k, min = k, sim_options={'name': 'cosine', 'user_based': True}, verbose = False)
+        elif(str == 'wzKNN'):
+            return KNNWithZScore(k = k, min = k, sim_options={'name': 'cosine', 'user_based': True}, verbose = False)
+        else:
+            return KNNBaseline(k = k, min = k, sim_options={'name': 'cosine', 'user_based': True}, verbose = False)
