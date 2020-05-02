@@ -2,14 +2,14 @@
 from Evaluator import Evaluator
 from surprise import NormalPredictor
 from matrix_factorization_algo import MatrixFactorizationAlgo
-from EvaluationDataSet import EvaluationDataSet
+from DataHandler import DataHandler
 
 from knn_algo import knn
 from hybrid_algo_weighted import HybridAlgoWeighted
 
 # from Evaluator import Evaluator
 #load dataset
-dataprocessor = EvaluationDataSet()
+dataprocessor = DataHandler()
 evaluationData = dataprocessor.getEvaluation()
 rankings = dataprocessor.getRank()
 evaluator = Evaluator()

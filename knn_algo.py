@@ -15,7 +15,7 @@ from surprise import KNNWithMeans
 from surprise import KNNBaseline
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
-from EvaluationDataSet import EvaluationDataSet
+from DataHandler import DataHandler
 from sklearn.model_selection import train_test_split
 from pathlib import Path
 import pandas as pd

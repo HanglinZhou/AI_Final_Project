@@ -2,7 +2,7 @@
 # generate recommendations, and then report accuracy date
 from surprise import accuracy
 from collections import defaultdict
-from EvaluationDataSet import EvaluationDataSet
+from DataHandler import DataHandler
 
 class algorithm_eval:
     # constructor
@@ -176,8 +176,6 @@ class algorithm_eval:
 
     def novelty(topNPred, rankings):
         return -1
-
-
 
 
 

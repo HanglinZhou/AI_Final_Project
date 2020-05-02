@@ -1,6 +1,6 @@
 import csv
 
-from EvaluationDataSet import EvaluationDataSet
+from DataHandler import DataHandler
 from algorithm_eval import algorithm_eval
 class Evaluator:
     algos = []
@@ -9,7 +9,7 @@ class Evaluator:
 
     def __init__(self):
 
-        tempdataset = EvaluationDataSet()
+        tempdataset = DataHandler()
         self.dataset = tempdataset
 
 
@@ -68,9 +68,8 @@ class Evaluator:
             print("\n Training Data:   ")
 
             fulltraindata = self.dataset.GetFullTrainData()
-            #why fit full?
-            algo.getAlgorithm().fit(fulltraindata)
 
+            algo.getAlgorithm().fit(fulltraindata)
             #get user anti test data set
             userAntiData = self.dataset.GetAntiUserTestData(testUser)
             #make the prediciton on unseen movies type:tuple
