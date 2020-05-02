@@ -2,8 +2,12 @@
 # generate recommendations, and then report accuracy date
 from surprise import accuracy
 from collections import defaultdict
+
+#from DataHandler import DataHandler
+
 from DataHandler import DataHandler
 import itertools as itr
+
 
 class algorithm_eval:
     # constructor
@@ -27,11 +31,13 @@ class algorithm_eval:
     # get mean absolute error
     def MAE(self,predictions):
         return round(accuracy.mae(predictions, verbose=False), self.NUM_DIGITS)
+        # return accuracy.mae(predictions, verbose=False)
 
     # get groot mean sqrt error:
     # penalize more when prediction way off, less when prediction close
     def RMSE(self,predictions):
         return round(accuracy.rmse(predictions, verbose=False), self.NUM_DIGITS)
+        # return accuracy.rmse(predictions, verbose=False)
 
     # return a map w/
     #     key: user, value: a list of top n estRating movies (movieID, estRating)
@@ -92,6 +98,7 @@ class algorithm_eval:
             # incremental total left out data
             totalLeftOut += 1
         return round(numHits / totalLeftOut, self.NUM_DIGITS)
+        # return numHits / totalLeftOut
 
     # returns numHits / totalLeftOut, if the hits has ratings >= ratingCutOff
     # @topNPred: a dictionary w/ key: userID,
@@ -120,6 +127,7 @@ class algorithm_eval:
                 # incremental total left out data
                 totalLeftOut += 1
         return round(numHits / totalLeftOut, self.NUM_DIGITS)
+        #return numHits / totalLeftOut
 
     # returns numHits / totalLeftOut foe each rating seperately
     # @topNPred: a dictionary w/ key: userID,
@@ -148,7 +156,7 @@ class algorithm_eval:
         res = ""
         # arrange hit rates in increasing order of the corresponding ratings
         for rating in sorted(numHits.keys()):
-            res += "{} {}\n".format(rating, round(numHits[rating]/totalLeftOut[rating], self.NUM_DIGITS))
+            res += "{:<10} {:<10}\n".format(rating, round(numHits[rating]/totalLeftOut[rating], self.NUM_DIGITS))
 
         return res
 
@@ -173,7 +181,8 @@ class algorithm_eval:
                     break
             # incremental total left out data
             totalLeftOut += 1
-        return round(sumRankedHits / totalLeftOut, self.NUM_DIGITS)
+            return round(sumRankedHits / totalLeftOut, self.NUM_DIGITS)
+            #return sumRankedHits / totalLeftOut
 
     # returns how diverse the recommendation is to users by using the simsAlgo
     # to compute the similarity between all pairs of recommendations for all users
@@ -201,6 +210,7 @@ class algorithm_eval:
         similarity = totalSim / numPairs
         diversity = 1 - similarity
         return round(diversity, self.NUM_DIGITS)
+        #return diversity
 
     # returns the percentage of users whose recommendations actually have
     #         ratings greater than or equal to the predRatingTheshold
@@ -221,6 +231,7 @@ class algorithm_eval:
                 if estRating >= predRatingThreshold:
                     numHits += 1
         return round(numHits / numUsers, self.NUM_DIGITS)
+        #return numHits / numUsers
 
     # returns how new the recommended content is
     # @topNPred: a dictionary w/ key: userID,
@@ -237,6 +248,7 @@ class algorithm_eval:
                 totalNovelty += popularRankings[movieID]
                 numMovies += 1
         return round(totalNovelty / numMovies, self.NUM_DIGITS)
+        #return totalNovelty / numMovies
 
     # returns number of recommended movies that are relevant / recommended movies
     #    a movie is relevant if its actual rating is greater than a given threshold
@@ -297,8 +309,14 @@ class algorithm_eval:
             self.algorithm.fit(evaluationDataSet.GetLOOTrain())
             #Prepare for the left one out cross validation
             looPredictions = self.algorithm.test(evaluationDataSet.GetLOOTest())
+<<<<<<< HEAD
             actualPredictions = self.algorithm.test(evaluationDataSet.GetLOOAntiTestSet())
             topNPredictions, topNPredictionsWithActual = self.getTopN(actualPredictions)
+=======
+            actuaPredictions = self.algorithm.test(evaluationDataSet.GetLOOAntiTestSet())
+            #Prepare for top-N evaluations
+            topNPredictions = self.getTopN(actuaPredictions)
+>>>>>>> 13193022901c7874e656efb48d53f2c3917d631d
             metrics["HR"] = self.hitRate(topNPredictions, looPredictions)
             metrics["CHR"] =self.cumulativeHitRate(topNPredictions,looPredictions)
             metrics["RHR"] = self.ratingHitRate(topNPredictions,looPredictions)
