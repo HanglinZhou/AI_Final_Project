@@ -35,10 +35,12 @@ class MatrixFactorizationAlgo:
     def generate_algorithms(self, rating_data):
         # here we separate untuned and tuned algo as it might take a really long time on tuning,
         # it's easier to comment out the tuning part if needed
-        # algo = {'SVD': SVD(), 'PMF': SVD(biased=False), 'SVD++': SVDpp(), 'NMF': NMF()}
-        #         # print('Generated algo object for SVD, PMF, SVD++, and NMF, tuned SVD, and tuned SVD++.')
-        algo = {'SVD': SVD()}
-        print('Generated algo object for SVD')
+        algo = {'SVD': SVD(), 'SVD++': SVDpp(), 'NMF': NMF()}
+        # algo = {'SVD': SVD(), 'PMF': SVD(biased=False), 'SVD++': SVDpp()}
+        # algo = {'PMF': SVD(biased=False)} # TODO: find out why error - empty topN
+        print('Generated algo object for SVD, PMF, SVD++, and NMF, tuned SVD, and tuned SVD++.')
+        # algo = {'SVD': SVD()}
+        # print('Generated algo object for SVD')
 
         # print('Tuning SVD parameters: ')
         # best_params_svd = self.tune_and_find_param('SVD_tuned', SVD, rating_data)
@@ -74,4 +76,3 @@ class MatrixFactorizationAlgo:
     #     # print the best set of parameters
     #     print(best_params)
     #     return best_params
-

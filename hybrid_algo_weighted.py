@@ -18,6 +18,7 @@ class HybridAlgoWeighted(AlgoBase):
         AlgoBase.__init__(self)
         if (sum(weights.values()) - 1) != 0:
             raise Exception("Attention, sum of weights need to be 1")
+        print("in constructor, algos:", type(algorithms))
         self.algorithms = algorithms
         self.weights = weights
 
@@ -25,7 +26,8 @@ class HybridAlgoWeighted(AlgoBase):
     def fit(self, trainset):
         AlgoBase.fit(self, trainset)
 
-        for algo in self.algorithms:
+        for algoName, algo in self.algorithms.items():
+            print(type(algo))
             algo.fit(trainset)
         return self
 

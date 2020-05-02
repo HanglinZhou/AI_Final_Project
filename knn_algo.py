@@ -106,11 +106,10 @@ class knn:
         # algo['tunedblKNN'] = tunedblKNN
 
         return algo
-    
+
     def data_split(self):
         data_path = Path("./data/movieLens/")
         ratings = pd.read_csv(data_path / "ratings.csv")
         # Split data into training and testing.
         x_train, x_test = train_test_split(ratings, test_size=0.2)
         return(x_train)
-        
