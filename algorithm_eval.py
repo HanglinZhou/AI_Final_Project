@@ -19,9 +19,6 @@ class algorithm_eval:
         self.algorithm = algorithm
         self.name = name
 
-    # returns a accuracy report including multiple metrics
-
-
     def getName(self):
         return self.name
 
@@ -31,18 +28,15 @@ class algorithm_eval:
     # get mean absolute error
     def MAE(self,predictions):
         return round(accuracy.mae(predictions, verbose=False), self.NUM_DIGITS)
-        # return accuracy.mae(predictions, verbose=False)
 
     # get groot mean sqrt error:
     # penalize more when prediction way off, less when prediction close
     def RMSE(self,predictions):
         return round(accuracy.rmse(predictions, verbose=False), self.NUM_DIGITS)
-        # return accuracy.rmse(predictions, verbose=False)
 
     # return a map w/
     #     key: user, value: a list of top n estRating movies (movieID, estRating)
-    # TODO: n change to 10
-    def getTopN(self, predictions, n=50, ratingCutOff=4.0):
+    def getTopN(self, predictions, n=10, ratingCutOff=4.0):
         # create a map - key: userID, value: a list of (movieID, estRating)
         res = defaultdict(list)
         res2 = defaultdict(list) # list with actualRating
@@ -86,14 +80,12 @@ class algorithm_eval:
             # incremental total left out data
             totalLeftOut += 1
         return round(numHits / totalLeftOut, self.NUM_DIGITS)
-        # return numHits / totalLeftOut
 
     # returns numHits / totalLeftOut, if the hits has ratings >= ratingCutOff
     # @topNPred: a dictionary w/ key: userID,
     #                            value: list of top N ratings (moviesID, estRating)
     # leftOutData: a list of left out data with high ratings from training set
     # ratingCutOff: if actual rating < ratingCutOff, does not count as hits
-    # (deal with sparse data point? TODO: make sure I'm not lying)
     def cumulativeHitRate(self,topNPred, leftOutData, ratingCutOff=3.0):
         # for each left out data, if the corresponding user has that movie in
         # its top N list, count it as a hit
@@ -115,7 +107,6 @@ class algorithm_eval:
                 # incremental total left out data
                 totalLeftOut += 1
         return round(numHits / totalLeftOut, self.NUM_DIGITS)
-        #return numHits / totalLeftOut
 
     # returns numHits / totalLeftOut foe each rating seperately
     # @topNPred: a dictionary w/ key: userID,
@@ -170,7 +161,6 @@ class algorithm_eval:
             # incremental total left out data
             totalLeftOut += 1
             return round(sumRankedHits / totalLeftOut, self.NUM_DIGITS)
-            #return sumRankedHits / totalLeftOut
 
     # returns how diverse the recommendation is to users by using the simsAlgo
     # to compute the similarity between all pairs of recommendations for all users
@@ -203,7 +193,6 @@ class algorithm_eval:
             diversity = 1 - similarity
 
         return round(diversity, self.NUM_DIGITS)
-        #return diversity
 
     # returns the percentage of users whose recommendations actually have
     #         ratings greater than or equal to the predRatingTheshold
@@ -224,7 +213,6 @@ class algorithm_eval:
                 if estRating >= predRatingThreshold:
                     numHits += 1
         return round(numHits / numUsers, self.NUM_DIGITS)
-        #return numHits / numUsers
 
     # returns how new the recommended content is
     # @topNPred: a dictionary w/ key: userID,
@@ -245,7 +233,6 @@ class algorithm_eval:
         if numMovies == 0:
             return -1
         return round(totalNovelty / numMovies, self.NUM_DIGITS)
-        #return totalNovelty / numMovies
 
 
     def evaluate(self, evaluationDataSet, TopN, n=10, verbose=True):
@@ -255,14 +242,9 @@ class algorithm_eval:
         self.algorithm.fit(evaluationDataSet.GetTrainData())
         predictions_acc= self.algorithm.test(evaluationDataSet.GetTestData())
 
-        metrics["RMSE"] = self.RMSE(predictions_acc) #how to call local function?
-        #print("rmse", metrics["RMSE"])
-        metrics["MAE"] = self.MAE(predictions_acc) #how to call local funciton?
-        #print("mae", metrics['MAE'])
+        metrics["RMSE"] = self.RMSE(predictions_acc)
+        metrics["MAE"] = self.MAE(predictions_acc)
         if(TopN):
-            # if(verbose):
-            #     print("Evluating top n recommender: ")
-                #train the model
             self.algorithm.fit(evaluationDataSet.GetLOOTrain())
             #Prepare for the left one out cross validation
             looPredictions = self.algorithm.test(evaluationDataSet.GetLOOTest())
@@ -276,10 +258,6 @@ class algorithm_eval:
             metrics["Diversity"] = self.diversity(topNPredictions, evaluationDataSet.GetSimilarities())
             metrics["Coverage"] = self.userCoverage(topNPredictions)
             metrics["Novelty"] = self.novelty(topNPredictions, evaluationDataSet.GetPopularRankings())
-
-            # metrics["Precision"] = self.precision(topNPredictionsWithActual)
-            # metrics["Recall"] = self.recall(topNPredictionsWithActual, self.algorithm.test(evaluationDataSet.GetFullTestData()))
-            # TODO: what the heck is this GetFullTestData?
 
         # Compute accuracy
         return metrics

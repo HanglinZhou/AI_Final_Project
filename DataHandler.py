@@ -40,10 +40,6 @@ class DataHandler:
             rank += 1
         return rankings
 
-    # def __init__(self):
-    #     self.evaluataiondata=self.LoadRating()
-    #     self.rankdata = self.loadPopularityData()
-
     def getEvaluation(self):
         return self.fulldata
     def getRank(self):
@@ -109,8 +105,10 @@ class DataHandler:
 
     def GetLOOTrain(self):
         return self.LOO_Train
+
     def GetLOOTest(self):
         return self.LOO_Test
+        
     def GetLOOAntiTestSet(self):
         return self.LOOAntiTest
 

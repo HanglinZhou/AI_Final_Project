@@ -14,48 +14,21 @@ evaluationData = dataprocessor.getEvaluation()
 rankings = dataprocessor.getRank()
 evaluator = Evaluator()
 
-#construct evaluator
-# evaluator = Evaluator()
+#use random as our basline here
+Random = NormalPredictor()
+evaluator.Add_Algo(Random, "Random")
 
-#call MFalgo generate algo
-#call KNNalgo generate algo
-
-# TODO: uncomment this
+# add knn algos
 knngenerator = knn()
 knn_algo_dict = knngenerator.generate_knn(evaluationData)
-# for key in knn_algo_dict:
-    # evaluator.Add_Algo(knn_algo_dict[key],key)
-
-# tune knn algo
-# tuned_knn_algo = {}
-# best_k = {}
-
-# for key in knn_algo:
-#     name,tuned_knn_algo[name] = knngenerator.analyze_knn_model(evaluationData, key)
-
-# print("tune added")
-
-# for key in tuned_knn_algo:
-#     print(type(tuned_knn_algo[key]))
-#     evaluator.Add_Algo(tuned_knn_algo[key],key)
-
-
-
-# use random as our basline here
-# Random = NormalPredictor()
-# evaluator.Add_Algo(Random, "Random")
+for key in knn_algo_dict:
+    evaluator.Add_Algo(knn_algo_dict[key],key)
 
 # adding MF algos
 mf_algo = MatrixFactorizationAlgo()
 mf_algo_dict = mf_algo.generate_algorithms(evaluationData)
 for key in mf_algo_dict:
     evaluator.Add_Algo(mf_algo_dict[key], key)
-
-# for key in mf_algo_dict:
-#     evaluator.Add_Algo(mf_algo_dict[key], key)
-# mf_algo_dict = mf_algo.generate_algorithms(evaluationData)
-# for key in mf_algo_dict:
-#     evaluator.Add_Algo(mf_algo_dict[key], key)
 
 # since KNN_bl has high novelty and diversity, SVD++ has lower novelty and diversity,
 # we can combine the KNN and SVD approaches in a way based on how much a user likes
@@ -70,7 +43,7 @@ for key in mf_algo_dict:
 #
 # here is an illustration of the hybrid approach we are describing. Assume the
 # user preference towards diversity and novelty is 0.8
-userPref_novel_diverse = 0.8  # could be computed in the future
+userPref_novel_diverse = 0.8  # could be computed and changed in the future
 
 hybrid_weighted_algorithms = {'blKNN_tuned' : knn_algo_dict['blKNN_tuned'], 'SVD_tuned' : mf_algo_dict['SVD_tuned']}
 
@@ -82,6 +55,8 @@ evaluator.Add_Algo(hybrid_weighted, "hybrid")
 
 # evaluate
 evaluator.print(True)
+
+# print recommendations for user
 dummyUserID = 11
 N = 5
 evaluator.GenerateTopNRecs(dummyUserID, N)

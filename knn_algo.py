@@ -27,52 +27,34 @@ import matplotlib.pyplot as plt
 from surprise import Reader
 
 class knn:
-
-    # Return knn algorithms in sequence of
-    # def untuned_knn_algo(self):
-    #
-    #     algo = {}
-    #     # User-based KNN cosine similarity
-    #     bcKNN = KNNBasic(sim_options={'name': 'cosine', 'user_based': True})
-    #     algo['bcKNN'] = bcKNN
-    #
-    #     wmKNN = KNNWithMeans(sim_options={'name': 'cosine', 'user_based': True})
-    #     algo['wmKNN'] = wmKNN
-    #
-    #     wzKNN = KNNWithZScore(sim_options={'name': 'cosine', 'user_based': True})
-    #     algo['wzKNN'] = wzKNN
-    #
-    #     blKNN = KNNBaseline(sim_options={'name': 'cosine', 'user_based': True})
-    #     algo['blKNN'] = blKNN
-    #
-    #     return algo
-
+    # returns the dictionary containing all knn algorithms
     def generate_knn(self,rating_data):
 
         algo = {}
-        # User-based KNN cosine similarity
-        # bcKNN = KNNBasic(sim_options={'name': 'cosine', 'user_based': True})
-        # algo['bcKNN'] = bcKNN
-        #
-        # wmKNN = KNNWithMeans(sim_options={'name': 'cosine', 'user_based': True})
-        # algo['wmKNN'] = wmKNN
-        #
-        # wzKNN = KNNWithZScore(sim_options={'name': 'cosine', 'user_based': True})
-        # algo['wzKNN'] = wzKNN
+        bcKNN = KNNBasic(sim_options={'name': 'cosine', 'user_based': True})
+        algo['bcKNN'] = bcKNN
 
-        # blKNN = KNNBaseline(sim_options={'name': 'cosine', 'user_based': True})
-        # algo['blKNN'] = blKNN
+        wmKNN = KNNWithMeans(sim_options={'name': 'cosine', 'user_based': True})
+        algo['wmKNN'] = wmKNN
 
-        # param_grid_bl = {'k': [10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 100]}
-        # best_params_bl = self.tune_and_find_parameter('blKNN', KNNBaseline, rating_data, param_grid_bl)
+        wzKNN = KNNWithZScore(sim_options={'name': 'cosine', 'user_based': True})
+        algo['wzKNN'] = wzKNN
 
-        # blKNN_tuned = KNNBaseline(k=best_params_bl['k'])
-        blKNN_tuned = KNNBaseline(k=30)
+        blKNN = KNNBaseline(sim_options={'name': 'cosine', 'user_based': True})
+        algo['blKNN'] = blKNN
+
+
+        # tune param for knnBaseline, since it has best accuracy
+        param_grid_bl = {'k': [10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 100]}
+        best_params_bl = self.tune_and_find_parameter('blKNN', KNNBaseline, rating_data, param_grid_bl)
+
+        blKNN_tuned = KNNBaseline(k=best_params_bl['k'])
         algo.update({'blKNN_tuned': blKNN_tuned})
 
         return algo
 
 
+    # returns the best parameters after tuning
     def tune_and_find_parameter(self,algo_name, algo, rating_data,param_grid):
 
         print("tuning for", algo_name, "hyperparameters")
@@ -87,93 +69,3 @@ class knn:
         # print the best set of parameters
         print("best params:", best_params)
         return best_params
-
-
-    # tuning by k-fold using cross-validation
-    # def knnBasic_tune(self,ratings,str):
-    #
-    #
-    #
-    #     knnbasic_gs = GridSearchCV(KNNBasic, param_grid, measures=['rmse', 'mae'], cv=5, n_jobs=5)
-    #     knnbasic_gs.fit(ratings)
-    #
-    #     knnmeans_gs = GridSearchCV(KNNWithMeans, param_grid, measures=['rmse', 'mae'], cv=5, n_jobs=5)
-    #     knnmeans_gs.fit(ratings)
-    #
-    #     knnz_gs = GridSearchCV(KNNWithZScore, param_grid, measures=['rmse', 'mae'], cv=5, n_jobs=5)
-    #     knnz_gs.fit(ratings)
-    #     # creating odd list of K for KNN
-    #     neighbors = list(range(1, 55, 4))
-    #
-    #     # empty list that will hold cv scores
-    #     cv_scores = []
-    #
-    #     # empty list that will hold RMSE mean train scores
-    #     rmse_train_scores = []
-    #
-    #     # empty list that will hold MAE mean train scores
-    #     mae_train_scores = []
-    #
-    #     print("tuning " + str)
-    #
-    #     # perform 10-fold cross validation
-    #     for k in neighbors:
-    #         algo = self.get_knn_algo(str,k)
-    #         test = cross_validate(algo, ratings, measures=['RMSE', 'MAE'], cv=5, verbose = False)
-    #         cv_scores.append(test)
-    #
-    #         # get mean train rmse
-    #         rmse = test['test_rmse']
-    #         rmse_train_scores.append(np.sum(rmse)/5)
-    #
-    #         # get mean train mae
-    #         mae = test['test_mae']
-    #         mae_train_scores.append(np.sum(mae)/5)
-    #
-    #     return (cv_scores, rmse_train_scores, mae_train_scores)
-
-
-    def analyze_knn_model(self,ratings, name):
-        (cv, rmse, mae) = self.knnBasic_tune(ratings,name)
-        neighbors = list(range(1, 15))
-
-        # plot rmse score
-        plt.plot(neighbors, rmse)
-        plt.xlabel('Value of K for ' + name)
-        plt.ylabel('rmse')
-        plt.show()
-
-        # plot mae score
-        plt.plot(neighbors, mae)
-        plt.xlabel('Value of K for ' + name)
-        plt.ylabel('mae')
-        plt.show()
-
-        # contruct knn algo with smallest rmse score
-        k = rmse.index(min(rmse)) + 1
-        tuned_algo = self.get_knn_algo(name, k)
-        addedname = "tuned"+name
-
-        return (addedname,tuned_algo)
-
-
-    def get_knn_algo(self,str,k):
-        if(str == 'bcKNN'):
-            return KNNBasic(k = k, min = k, sim_options={'name': 'cosine', 'user_based': True},verbose = False)
-        elif(str == 'wmKNN'):
-            return KNNWithMeans(k = k, min = k, sim_options={'name': 'cosine', 'user_based': True}, verbose = False)
-        elif(str == 'wzKNN'):
-            return KNNWithZScore(k = k, min = k, sim_options={'name': 'cosine', 'user_based': True}, verbose = False)
-        else:
-            return KNNBaseline(k = k, min = k, sim_options={'name': 'cosine', 'user_based': True}, verbose = False)
-
-
-    # # lines call at recommendation engine
-    # # call KNNalgo generate algo
-    # knn_algo = knn.untuned_knn_algo()
-    #
-    # # tune knn algo
-    # tuned_knn_algo = {}
-    # best_k = {}
-    # for key in knn_algo:
-    #     best_k[key], tuned_knn_algo[key] = knn.analyze_knn_model(ratings, key)

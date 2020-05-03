@@ -7,7 +7,6 @@ algorithms included:
 3. PMF (Probabilistic Matrix Factorization): setting "biased" parameter to False
 4. NMF (Non-negative Matrix Factorization)
 
-#todo: more tuning algo & param
 We also want to tune our chosen algorithms (SVD & SVDpp) and here is a list of parameters we are interested:
 1. n_factors: The number of factors. Default is 100.
 2. n_epochs: The number of iteration of the SGD procedure. Default is 20
@@ -35,31 +34,33 @@ class MatrixFactorizationAlgo:
     def generate_algorithms(self, rating_data):
         # here we separate untuned and tuned algo as it might take a really long time on tuning,
         # it's easier to comment out the tuning part if needed
-        # algo = {'SVD': SVD(), 'PMF': SVD(biased=False), 'SVD++': SVDpp(), 'NMF': NMF()}
         algo = {}
-        # algo.update({'SVD': SVD()})
-        # algo.update({'PMF': SVD(biased=False)})
-        # algo.update({'SVD++': SVDpp()})
-        # algo.update({'NMF': NMF()})
+        algo.update({'SVD': SVD()})
+        algo.update({'PMF': SVD(biased=False)})
+        algo.update({'SVD++': SVDpp()})
+        algo.update({'NMF': NMF()})
         print('Generated algo object for SVD, PMF, SVD++, and NMF.')
 
         # generate tuned SVD algorithm
-        # param_grid_svd = {'n_factors': [130, 135], 'n_epochs': [50, 57], 'lr_all': [0.0017, 0.002]}
-        # best_params_svd = self.tune_and_find_param('SVD', SVD, rating_data, param_grid_svd)
+        param_grid_svd = {'n_factors': [130, 200], 'n_epochs': [50, 60], 'lr_all': [0.0015, 0.002], 'reg_all' : [0.02, 0.03]}
+        best_params_svd = self.tune_and_find_param('SVD', SVD, rating_data, param_grid_svd)
+
+
+        # initiate tuned MF algos with tuned hyperparameters
+        SVD_tuned = SVD(n_factors = best_params_svd['n_factors'],
+                        n_epochs = best_params_svd['n_epochs'],
+                        lr_all = best_params_svd['lr_all'])
+
+        # append new algos to result dict
+        algo.update({'SVD_tuned': SVD_tuned})
+
+        # code for future use: tuning SVDpp, NMF
         #
         # param_grid_svdpp = {'n_factors': [20, 30], 'n_epochs': [15, 25], 'lr_all': [0.005, 0.0085]}
         # best_params_svdpp = self.tune_and_find_param('SVD++', SVDpp, rating_data, param_grid_svdpp)
         #
         # param_grid_nmf = {'n_factors': [50, 55], 'n_epochs': [45, 50], 'lr_bu': [0.02, 0.025], 'lr_bi': [0.02, 0.025]}
         # best_params_nmf = self.tune_and_find_param('NMF', NMF, rating_data, param_grid_nmf)
-
-        # initiate tuned MF algos with tuned hyperparameters
-        # SVD_tuned = SVD(n_factors = best_params_svd['n_factors'],
-        #                 n_epochs = best_params_svd['n_epochs'],
-        #                 lr_all = best_params_svd['lr_all'])
-
-        SVD_tuned = SVD(n_factors = 200, n_epochs = 50,
-                        lr_all = 0.02, reg_all=0.03)
 
         # SVDpp_tuned = SVDpp(n_factors = best_params_svdpp['n_factors'],
         #                 n_epochs = best_params_svdpp['n_epochs'],
@@ -69,54 +70,8 @@ class MatrixFactorizationAlgo:
         #                 n_epochs = best_params_nmf['n_epochs'],
         #                 lr_bu = best_params_nmf['lr_bu'],
         #                 lr_bi = best_params_nmf['lr_bi'])
-
-        # append new algos to result dict
-        algo.update({'SVD_tuned': SVD_tuned})
         # algo.update({'SVD++_tuned': SVDpp_tuned})
         # algo.update({'NMF_tuned': NMF_tuned})
-        print('Generated algo object for SVD_tuned, SVD++_tuned, and NMF_tuned.')
-
-        # algo = {'SVD': SVD(), 'SVD++': SVDpp(), 'NMF': NMF()}
-        # algo = {'SVD': SVD(), 'PMF': SVD(biased=False), 'SVD++': SVDpp()}
-        # algo = {'PMF': SVD(biased=False)} # TODO: find out why error - empty topN
-        # print('Generated algo object for SVD, PMF, SVD++, and NMF, tuned SVD, and tuned SVD++.')
-        # algo = {'SVD': SVD()}
-        # print('Generated algo object for SVD')
-
-
-        # algo = {'SVD': SVD(), 'PMF': SVD(biased=False), 'SVD++': SVDpp(), 'NMF': NMF()}
-        # print('Generated algo object for SVD, PMF, SVD++, and NMF, tuned SVD, and tuned SVD++.')
-
-        # print('Tuning SVD parameters: ')
-        #
-        #primary comment start
-        # param_grid_svd = {'n_factors': [10, 200], 'n_epochs': [20, 50], 'lr_all': [0.001, 0.020],
-
-        # print('Tuning SVD parameters: ')
-        # param_grid_svd = {'n_factors': [50, 100], 'n_epochs': [20, 30], 'lr_all': [0.005, 0.010],
-
-        #               'reg_all': [0.010, 0.030]}
-        # best_params_svd = self.tune_and_find_param('SVD_tuned', SVD, rating_data, param_grid_svd)
-        # SVD_tuned = SVD(n_factors = best_params_svd['n_factors'], n_epochs = best_params_svd['n_epochs'],
-        #                 lr_all = best_params_svd['lr_all'], reg_all = best_params_svd['reg_all'])
-
-
-        #primary comment end
-        # print('Tuning SVD++ parameters: ')
-        # param_grid_svdpp = {'n_factors': [50, 100], 'n_epochs': [20, 50], 'lr_all': [0.001, 0.010],
-        #                   'reg_all': [0.015, 0.025]}
-        # best_params_svdpp = self.tune_and_find_param('SVD++_tuned', SVDpp, rating_data, param_grid_svdpp)
-        #
-        # SVDpp_tuned = SVDpp(n_factors = best_params_svdpp['n_factors'], n_epochs = best_params_svdpp['n_epochs'],
-        #                 lr_all = best_params_svdpp['lr_all'], reg_all = best_params_svdpp['reg_all'])
-
-        #
-        # # algo['SVD_tuned'] =  SVD_tuned
-
-        # algo['SVD_tuned'] =  SVD_tuned
-
-        # algo['SVD++_tuned'] = SVDpp_tuned
-        # print('Generated algo object for tuned SVD and tuned SVD++.')
 
         return algo
 
@@ -125,8 +80,6 @@ class MatrixFactorizationAlgo:
     # returns the best n_factors, n_epochs, lr_all found
     def tune_and_find_param(self, algo_name, algo, rating_data,
         param_grid = {'n_factors': [50, 100], 'n_epochs': [20, 30], 'lr_all': [0.005, 0.010]}):
-        # param_grid = {'n_factors': [10, 200], 'n_epochs': [20, 50], 'lr_all': [0.001, 0.020],
-        #                   'reg_all': [0.010, 0.030]}
         # use GridSearchCVcomputes which (from surpise documentation)
         # computes accuracy metrics for an algorithm on various combinations of parameters, over a cross-validation procedure.
         print("tuning for", algo_name, "hyperparameters")
