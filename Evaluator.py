@@ -5,13 +5,14 @@ from algorithm_eval import algorithm_eval
 class Evaluator:
     algos = []
     movie_id_to_name = {}
-    movie = '../ml-latest-small/movies.csv'
+    # movies = './test-data/movies.csv'
+    movies = './ml-latest-small/movies.csv'
 
     def __init__(self):
 
         tempdataset = DataHandler()
         self.dataset = tempdataset
-
+        self.readMovieName()
 
     def Add_Algo(self,algorithm,name):
         alg = algorithm_eval(algorithm,name)
@@ -27,7 +28,9 @@ class Evaluator:
                     self.movie_id_to_name[movieID] = movieName
 
     def getMovieName(self,movieId):
-        return self.movie_id_to_name[movieId]
+        if movieId in self.movie_id_to_name.keys():
+            return self.movie_id_to_name[movieId]
+        return ""
 
 
     def print(self,TopN):
@@ -64,7 +67,7 @@ class Evaluator:
             print("RHR: Rating Hit Rate ")
 
 
-    def GenerateTopNRecs(self,movieList,testUser,N):
+    def GenerateTopNRecs(self, testUser, N):
         for algo in self.algos:
             print("\n",algo.getName())
             #get full train data set
@@ -78,7 +81,7 @@ class Evaluator:
             #make the prediciton on unseen movies type:tuple
             predictions = algo.getAlgorithm().test(userAntiData)
 
-            print("The Top", N, "Recommendations Are: ")
+            print("Top", N, "Rec - estRating")
             recommendations = []
 
             #since it's tuple, we have to add it into an list and then sort.
@@ -88,5 +91,6 @@ class Evaluator:
             #Descending sort by estimatedRating
             recommendations.sort(key = lambda  x:x[1],reverse=True)
 
+            # rating[0]: movieID, rating[1]: est Rating
             for rating in recommendations[:N]:
-                print(movieList.getMovieName(rating[0]),rating[1])
+                print(self.getMovieName(rating[0]),"-",rating[1])

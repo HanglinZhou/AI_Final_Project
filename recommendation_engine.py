@@ -19,11 +19,13 @@ evaluator = Evaluator()
 
 #call MFalgo generate algo
 #call KNNalgo generate algo
+
+# TODO: uncomment this
 knngenerator = knn()
-#knn_algo = knngenerator.untuned_knn_algo()
-knn_algo = knngenerator.generate_knn(evaluationData)
-for key in knn_algo:
-    evaluator.Add_Algo(knn_algo[key],key)
+knn_algo_dict = knngenerator.generate_knn(evaluationData)
+# for key in knn_algo_dict:
+    # evaluator.Add_Algo(knn_algo_dict[key],key)
+
 # tune knn algo
 # tuned_knn_algo = {}
 # best_k = {}
@@ -39,50 +41,47 @@ for key in knn_algo:
 
 
 
-#use random as our basline here
-Random = NormalPredictor()
-evaluator.Add_Algo(Random, "Random")
+# use random as our basline here
+# Random = NormalPredictor()
+# evaluator.Add_Algo(Random, "Random")
 
-# # adding MF algos
-# mf_algo = MatrixFactorizationAlgo()
+# adding MF algos
+mf_algo = MatrixFactorizationAlgo()
+mf_algo_dict = mf_algo.generate_algorithms(evaluationData)
+for key in mf_algo_dict:
+    evaluator.Add_Algo(mf_algo_dict[key], key)
+
+# for key in mf_algo_dict:
+#     evaluator.Add_Algo(mf_algo_dict[key], key)
 # mf_algo_dict = mf_algo.generate_algorithms(evaluationData)
 # for key in mf_algo_dict:
 #     evaluator.Add_Algo(mf_algo_dict[key], key)
-#use random as our basline here
 
-# for key in mf_algo_dict:
-#     evaluator.Add_Algo(mf_algo_dict[key], key)
-# mf_algo_dict = mf_algo.generate_algorithms(evaluationData)
-# for key in mf_algo_dict:
-#     evaluator.Add_Algo(mf_algo_dict[key], key)
+# since KNN_bl has high novelty and diversity, SVD++ has lower novelty and diversity,
+# we can combine the KNN and SVD approaches in a way based on how much a user likes
+# novelty & diversity
 
-
-
-
-
-
-
-
-# adding knn algos
-# knn_algo = knn.untuned_knn_algo()
+# Suppose a user has been enjoying novel and diverse recommendations, the
+# user's preference towards novelty and diversity is high, so we will assign more
+# weight to the KNN which yields more novelty and diversity;
+# on the other hand if a user dislikes novel and diverse recommendations,
+# we will assign more weight to the SVD algorithm, according to that user's
+# preference in the hybrid approach
 #
-# # tune knn algo
-# tuned_knn_algo = {}
-# best_k = {}
-# for key in knn_algo:
-#     best_k[key], tuned_knn_algo[key] = knn.analyze_knn_model(evaluationData,key)
+# here is an illustration of the hybrid approach we are describing. Assume the
+# user preference towards diversity and novelty is 0.8
+userPref_novel_diverse = 0.8  # could be computed in the future
 
-# adding hybrid algos
-# hybrid_weighted_algorithms = {'SVD' : mf_algo_dict['SVD'], 'NMF' : mf_algo_dict['NMF']}
-# hybrid_weighted_weights = {'SVD' : 0.7, 'NMF' :0.3}
-# hybrid_weighted = HybridAlgoWeighted(hybrid_weighted_algorithms, hybrid_weighted_weights)
-# evaluator.Add_Algo(hybrid_weighted, "Weighted Hybrid")
+hybrid_weighted_algorithms = {'blKNN_tuned' : knn_algo_dict['blKNN_tuned'], 'SVD_tuned' : mf_algo_dict['SVD_tuned']}
 
+# hybrid 1 with high novelty and diversity
+hybrid_weighted_weights = {'blKNN_tuned' : userPref_novel_diverse, 'SVD_tuned' : 1 - userPref_novel_diverse}
+hybrid_weighted = HybridAlgoWeighted(hybrid_weighted_algorithms, hybrid_weighted_weights)
+evaluator.Add_Algo(hybrid_weighted, "hybrid")
 
-# hybrid_weighted_algorithms = {'SVD_tuned' : mf_algo_dict['SVD_tuned'], 'NMF' : mf_algo_dict['NMF']}
-# hybrid_weighted_weights = {'SVD_tuned' : 0.7, 'NMF' :0.3}
-# hybrid_weighted = HybridAlgoWeighted(hybrid_weighted_algorithms, hybrid_weighted_weights)
-# evaluator.Add_Algo(hybrid_weighted, "Weighted Hybrid")
 
 # evaluate
 evaluator.print(True)
+dummyUserID = 11
+N = 5
+evaluator.GenerateTopNRecs(dummyUserID, N)

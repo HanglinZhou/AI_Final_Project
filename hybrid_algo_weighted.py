@@ -27,17 +27,19 @@ class HybridAlgoWeighted(AlgoBase):
         AlgoBase.fit(self, trainset)
 
         for algoName, algo in self.algorithms.items():
-            print(type(algo))
             algo.fit(trainset)
         return self
 
     # derived from AlgoBase: u as uid: (Raw) id of the user; i as iid: (Raw) id of the item.
     def estimate(self, u, i):
         #print('Hybrid Algo included (algo with weight): ')
-        for algo in self.algorithms:
+        for algoName, algo in self.algorithms.items():
             # sum of (each algo's estimate * its weight) = weighted_estimate
             #print('', algo, ' with ', self.weights[algo])
-            self.weighted_estimate += self.algorithms[algo].estimate(u, i) * self.weights[algo]
+            est = self.algorithms[algoName].estimate(u, i)
+            if not isinstance(est, float):
+                est = est[0]
+            self.weighted_estimate += est * self.weights[algoName]
 
         #print('Hybrid Algo Weighted estimate: ', self.weighted_estimate)
         return self.weighted_estimate

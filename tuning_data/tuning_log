@@ -163,3 +163,102 @@ Ratings    HitRate
 4.0        0.101266
 4.5        0.115385
 5.0        0.159664
+
+Algorithm  RMSE       MAE        HR         CHR        ARHR       Diversity  Coverage   Novelty
+hybrid1    1.824      1.497      0.08       0.09       0.0        0.044      50.0       677.232
+RHR
+Ratings    HitRate
+2.0        0.023
+2.5        0.05
+3.0        0.081
+3.5        0.133
+4.0        0.063
+4.5        0.035
+5.0        0.156
+
+
+ Note:
+
+RMSE: Root Mean Squared Error
+MAE: Mean Average Error
+HR: Hit Rate
+CHR: Cumulative Hit Rate
+ARHR: Average Rank Hit Rate
+Diversity: 1-Similarity
+Coverage: Ratio of users for whom recommendations above a certain threshold exist.
+Novelty: Average popularity rank of recommended items.
+RHR: Rating Hit Rate
+
+ hybrid1
+
+ Training Data:
+Estimating biases using als...
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Top 5 Rec - estRating
+Toy Story (1995) - 5
+Grumpier Old Men (1995) - 5
+Seven (a.k.a. Se7en) (1995) - 5
+Usual Suspects, The (1995) - 5
+From Dusk Till Dawn (1996) - 5
+
+Algorithm  RMSE       MAE        HR         CHR        ARHR       Diversity  Coverage   Novelty
+SVD_tuned  0.853      0.656      0.085      0.098      0.0        0.076      45.767     713.934
+RHR
+Ratings    HitRate
+0.5        0.1
+2.0        0.026
+3.0        0.034
+3.5        0.073
+4.0        0.078
+4.5        0.13
+5.0        0.19
+
+hybrid     1.822      1.497      0.102      0.102      0.0        0.043      50.0       687.362
+RHR
+Ratings    HitRate
+0.5        0.1
+1.0        0.077
+1.5        0.143
+2.0        0.154
+3.0        0.103
+3.5        0.055
+4.0        0.114
+4.5        0.074
+5.0        0.121
+
+
+ Note:
+
+RMSE: Root Mean Squared Error
+MAE: Mean Average Error
+HR: Hit Rate
+CHR: Cumulative Hit Rate
+ARHR: Average Rank Hit Rate
+Diversity: 1-Similarity
+Coverage: Ratio of users for whom recommendations above a certain threshold exist.
+Novelty: Average popularity rank of recommended items.
+RHR: Rating Hit Rate
+
+ SVD_tuned
+
+ Training Data:
+Top 5 Rec - estRating
+Grave of the Fireflies (Hotaru no haka) (1988) - 5
+Schindler's List (1993) - 4.9880727414551265
+Ronin (1998) - 4.981575475616532
+Jules and Jim (Jules et Jim) (1961) - 4.94926450940662
+Cinema Paradiso (Nuovo cinema Paradiso) (1989) - 4.933999434539005
+
+ hybrid
+
+ Training Data:
+Estimating biases using als...
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Top 5 Rec - estRating
+Toy Story (1995) - 5
+Grumpier Old Men (1995) - 5
+Seven (a.k.a. Se7en) (1995) - 5
+Usual Suspects, The (1995) - 5
+From Dusk Till Dawn (1996) - 5

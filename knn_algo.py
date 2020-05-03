@@ -51,23 +51,24 @@ class knn:
 
         algo = {}
         # User-based KNN cosine similarity
-        bcKNN = KNNBasic(sim_options={'name': 'cosine', 'user_based': True})
-        algo['bcKNN'] = bcKNN
-
-        wmKNN = KNNWithMeans(sim_options={'name': 'cosine', 'user_based': True})
-        algo['wmKNN'] = wmKNN
-
-        wzKNN = KNNWithZScore(sim_options={'name': 'cosine', 'user_based': True})
-        algo['wzKNN'] = wzKNN
-
-        blKNN = KNNBaseline(sim_options={'name': 'cosine', 'user_based': True})
-        algo['blKNN'] = blKNN
-
-        # param_grid_bl = {'k': [10, 15, 20, 25]}
-        # best_params_bl = self.tune_and_find_parameter('blKNN', KNNBaseline, rating_data, param_grid_bl)
+        # bcKNN = KNNBasic(sim_options={'name': 'cosine', 'user_based': True})
+        # algo['bcKNN'] = bcKNN
         #
+        # wmKNN = KNNWithMeans(sim_options={'name': 'cosine', 'user_based': True})
+        # algo['wmKNN'] = wmKNN
+        #
+        # wzKNN = KNNWithZScore(sim_options={'name': 'cosine', 'user_based': True})
+        # algo['wzKNN'] = wzKNN
+
+        # blKNN = KNNBaseline(sim_options={'name': 'cosine', 'user_based': True})
+        # algo['blKNN'] = blKNN
+
+        # param_grid_bl = {'k': [10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 100]}
+        # best_params_bl = self.tune_and_find_parameter('blKNN', KNNBaseline, rating_data, param_grid_bl)
+
         # blKNN_tuned = KNNBaseline(k=best_params_bl['k'])
-        # algo.update({'blKNN_tuned': blKNN_tuned})
+        blKNN_tuned = KNNBaseline(k=30)
+        algo.update({'blKNN_tuned': blKNN_tuned})
 
         return algo
 
